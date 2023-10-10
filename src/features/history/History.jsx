@@ -34,7 +34,7 @@ function History() {
   return (
     <Box
       component="section"
-      sx={{ height: '100%', bgcolor: 'background.tooltip', p: 1 }}
+      sx={{ bgcolor: 'background.tooltip', p: 1 }}
     >
       <Box component="header">
         Searchbar goes here

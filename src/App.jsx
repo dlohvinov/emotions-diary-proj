@@ -14,7 +14,7 @@ function App() {
   return (
     <div>
       <MainPage></MainPage>
-      <Auth></Auth>
+      {/*<Auth></Auth>*/}
     </div>
   );
 }

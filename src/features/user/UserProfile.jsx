@@ -10,7 +10,8 @@ import {
   Box,
   Typography,
 } from '@mui/joy';
-import { Logout } from '@mui/icons-material';
+import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
+import { Logout, LoginSharp } from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
 import { userinfoSelector, authSelector } from '../auth/authSlice.js';
 
@@ -19,6 +20,10 @@ function UserProfile() {
 
   const auth = useSelector(authSelector);
   const userinfo = useSelector(userinfoSelector);
+
+  function signIn() {
+    return signInWithPopup(auth, new GoogleAuthProvider());
+  }
 
   return (
     <Dropdown>
@@ -45,6 +50,13 @@ function UserProfile() {
           </Typography>
         </Box>
         <ListDivider></ListDivider>
+        <MenuItem
+          color="success"
+          onClick={() => signIn()}
+        >
+          <LoginSharp></LoginSharp>
+          {t('reusable.login')}
+        </MenuItem>
         <MenuItem
           color="danger"
           onClick={() => auth.signOut()}

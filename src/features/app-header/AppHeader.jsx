@@ -31,10 +31,7 @@ function AppHeader() {
         </Grid>
         <Grid xs={3}>
           <EmotionPopup
-            activator={
-              <Button>Add entry</Button>
-            }
-            onSave={() => {}}
+            activator={<Button>Add entry</Button>}
           ></EmotionPopup>
           <UserProfile></UserProfile>
         </Grid>

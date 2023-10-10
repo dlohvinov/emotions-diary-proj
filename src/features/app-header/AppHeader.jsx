@@ -6,8 +6,8 @@ import UserProfile from '../user/UserProfile.jsx';
 function AppHeader() {
   const { t } = useTranslation();
 
-  // const theme = useTheme();
-  // console.info(theme);
+  const theme = useTheme();
+  console.info(theme);
 
   return (
     <Box

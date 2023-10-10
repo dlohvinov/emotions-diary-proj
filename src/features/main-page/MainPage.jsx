@@ -4,7 +4,10 @@ import History from '../history/History.jsx';
 
 function MainPage() {
   return (
-    <Box component="main" sx={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
+    <Box
+      component="main"
+      sx={{ height: '100vh', display: 'flex', flexDirection: 'column' }}
+    >
       <AppHeader></AppHeader>
       <Grid container spacing={1} sx={{ flexGrow: 1 }}>
         <Grid md={5}>

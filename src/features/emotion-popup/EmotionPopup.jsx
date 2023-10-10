@@ -21,6 +21,7 @@ import {
   Typography, Box,
 } from '@mui/joy';
 import { instanceSelector } from '../firebase/firebaseSlice.js';
+import { userinfoSelector } from '../auth/authSlice.js';
 
 const emotionsList = [
   'happy',
@@ -37,23 +38,28 @@ const causesList = [
   'work',
 ];
 
+const getDraftSchema = () => ({
+  emotion: '',
+  cause: [],
+  description: '',
+});
+
 function EmotionPopup({ activator, record, onSave }) {
   const { t } = useTranslation();
 
+  const userinfo = useSelector(userinfoSelector);
   const instance = useSelector(instanceSelector);
+
   const db = getFirestore(instance);
 
   const [open, setOpen] = useState(false);
 
-  const [draft, setDraft] = useImmer({
-    emotion: '',
-    cause: [],
-    description: '',
-  });
+  const [draft, setDraft] = useImmer(getDraftSchema());
 
   useEffect(() => {
     if (record) setDraft(record);
-  }, [record]);
+    else setDraft(getDraftSchema());
+  }, [open]);
 
   function setToDraft({ path, value }) {
     return setDraft((draft) => set(draft, path, value));
@@ -63,7 +69,12 @@ function EmotionPopup({ activator, record, onSave }) {
     if (record) {
       await setDoc(doc(db, 'emotions', record.id), draft);
     } else {
-      await addDoc(collection(db, 'emotions'), draft);
+      const newRecord = {
+        ...draft,
+        createdAt: Date.now(),
+        uid: userinfo.uid,
+      };
+      await addDoc(collection(db, 'emotions'), newRecord);
     }
     setOpen(false);
     return onSave && onSave();

@@ -1,28 +1,40 @@
 import { Box } from '@mui/joy';
 import { useTranslation } from 'react-i18next';
 import { useEffect, useState } from 'react';
-import { getFirestore, getDocs, collection, deleteDoc, doc, onSnapshot } from 'firebase/firestore';
+import {
+  getFirestore,
+  collection,
+  deleteDoc,
+  doc,
+  onSnapshot,
+  query,
+  where,
+} from 'firebase/firestore';
 import { useSelector } from 'react-redux';
 import { instanceSelector } from '../firebase/firebaseSlice.js';
 import HistoryRecord from './HistoryRecord.jsx';
+import { userinfoSelector } from '../auth/authSlice.js';
 
 function History() {
   const { t } = useTranslation();
 
   const [records, setRecords] = useState([]);
 
+  const userinfo = useSelector(userinfoSelector);
   const instance = useSelector(instanceSelector);
   const db = getFirestore(instance);
 
   useEffect(() => {
-    const unsubscribe = onSnapshot(collection(db, 'emotions'), (docSnapshot) => {
+    if (!userinfo) return;
+    const q = query(collection(db, 'emotions'), where('uid', '==', userinfo.uid));
+    const unsubscribe = onSnapshot(q, (docSnapshot) => {
       setRecords(docSnapshot.docs.map((doc) => ({
         ...doc.data(),
         id: doc.id,
       })));
     });
     return unsubscribe;
-  }, []);
+  }, [userinfo]);
 
   async function deleteRecord(record) {
     await deleteDoc(doc(db, 'emotions', record.id));

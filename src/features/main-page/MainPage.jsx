@@ -7,10 +7,21 @@ function MainPage() {
   return (
     <Box
       component="main"
-      sx={{ height: '100vh', display: 'flex', flexDirection: 'column' }}
+      sx={{
+        height: '100vh',
+        display: 'flex',
+        flexDirection: 'column',
+      }}
     >
       <AppHeader></AppHeader>
-      <Grid container spacing={1} sx={{ flexGrow: 1 }}>
+      <Grid
+        spacing={1}
+        sx={{
+          flexGrow: 1,
+          p: 1,
+        }}
+        container
+      >
         <Grid md={5}>
           <History />
         </Grid>

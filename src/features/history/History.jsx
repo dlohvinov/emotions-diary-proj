@@ -49,7 +49,8 @@ function History() {
       sx={{
         height: '100%',
         minHeight: 0,
-        bgcolor: 'warning.200',
+        bgcolor: 'background.surface',
+        boxShadow: 'md',
         p: 1,
       }}
     >
@@ -57,7 +58,11 @@ function History() {
         Searchbar goes here
         Then go most common emotions | causes
       </Box>
-      <Box component="section">
+      <Box component="section" sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 1,
+      }}>
         {records.map((record) => (
           <HistoryRecord
             key={record.id}

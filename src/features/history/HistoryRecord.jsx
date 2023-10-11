@@ -1,12 +1,33 @@
-import { Box, IconButton } from '@mui/joy';
+import {
+  Box,
+  IconButton,
+  Card,
+  Typography,
+} from '@mui/joy';
 import PropTypes from 'prop-types';
 import { Edit, Delete } from '@mui/icons-material';
 import EmotionPopup from '../emotion-popup/EmotionPopup.jsx';
 
 function HistoryRecord({ record, onEdit, onDelete }) {
   return (
-    <Box component="article">
-      <Box component="header">{record.emotion}</Box>
+    <Card
+      component="article"
+      variant="soft"
+    >
+      <Box component="header">
+        <Typography
+          variant="title1"
+          component="h2"
+        >
+          {record.emotion}
+        </Typography>
+        <Typography
+          variant="subtitle1"
+          component="h3"
+        >
+          {new Date(record.createdAt).toLocaleDateString()}
+        </Typography>
+      </Box>
       <Box component="section">
         {record.cause.map((cause) => (
           <Box key={cause}>{cause}</Box>
@@ -31,7 +52,7 @@ function HistoryRecord({ record, onEdit, onDelete }) {
           <Delete></Delete>
         </IconButton>
       </Box>
-    </Box>
+    </Card>
   );
 }
 

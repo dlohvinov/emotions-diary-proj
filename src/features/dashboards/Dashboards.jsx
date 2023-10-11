@@ -10,7 +10,8 @@ function Dashboards() {
         p: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        bgcolor: 'success.200',
+        bgcolor: 'background.surface',
+        boxShadow: 'md',
       }}
     >
       <Typography>Dashboards</Typography>

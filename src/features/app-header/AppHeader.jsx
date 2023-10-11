@@ -13,9 +13,9 @@ function AppHeader() {
     <Box
       component="header"
       sx={{
-        boxShadow: 'lg',
+        boxShadow: 'md',
         p: 1,
-        bgcolor: 'primary.300',
+        bgcolor: 'background.surface',
       }}
     >
       <Grid container spacing={1}>
@@ -29,7 +29,7 @@ function AppHeader() {
         <Grid xs={6}>
           Datepicker goes here
         </Grid>
-        <Grid xs={3}>
+        <Grid xs={3} sx={{ display: 'flex' }} gap={1} justifyContent="flex-end">
           <EmotionPopup
             activator={<Button>Add entry</Button>}
           ></EmotionPopup>

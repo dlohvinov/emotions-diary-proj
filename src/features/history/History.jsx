@@ -14,11 +14,14 @@ import { useSelector } from 'react-redux';
 import { instanceSelector } from '../firebase/firebaseSlice.js';
 import HistoryRecord from './HistoryRecord.jsx';
 import { userinfoSelector } from '../auth/authSlice.js';
+import EmotionPopup from '../emotion-popup/EmotionPopup.jsx';
 
 function History() {
   const { t } = useTranslation();
 
   const [records, setRecords] = useState([]);
+  const [reviewedRecord, setReviewedRecord] = useState(null);
+  const [reviewedRecordMode, setReviewedRecordMode] = useState(null);
 
   const userinfo = useSelector(userinfoSelector);
   const instance = useSelector(instanceSelector);
@@ -40,7 +43,19 @@ function History() {
     await deleteDoc(doc(db, 'emotions', record.id));
   }
 
-  async function editRecord() {
+  function viewRecord(record) {
+    setReviewedRecord(record);
+    setReviewedRecordMode('view');
+  }
+
+  function editRecord(record) {
+    setReviewedRecord(record);
+    setReviewedRecordMode('edit');
+  }
+
+  function handleEmotionPopupClose() {
+    setReviewedRecord(null);
+    setReviewedRecordMode(null);
   }
 
   return (
@@ -54,21 +69,30 @@ function History() {
         p: 1,
       }}
     >
+      <EmotionPopup
+        activator={!!reviewedRecord}
+        record={reviewedRecord}
+        mode={reviewedRecordMode}
+        onClose={handleEmotionPopupClose}
+      ></EmotionPopup>
       <Box component="header">
         Searchbar goes here
         Then go most common emotions | causes
       </Box>
-      <Box component="section" sx={{
+      <Box
+        component="section" sx={{
         display: 'flex',
         flexDirection: 'column',
         gap: 1,
-      }}>
+      }}
+      >
         {records.map((record) => (
           <HistoryRecord
             key={record.id}
             record={record}
-            onDelete={deleteRecord}
+            onView={viewRecord}
             onEdit={editRecord}
+            onDelete={deleteRecord}
           ></HistoryRecord>
         ))}
       </Box>

@@ -44,7 +44,13 @@ const getDraftSchema = () => ({
   description: '',
 });
 
-function EmotionPopup({ activator, record, onSave }) {
+function EmotionPopup({
+                        activator,
+                        record,
+                        onSave,
+                        onClose,
+                        mode,
+                      }) {
   const { t } = useTranslation();
 
   const userinfo = useSelector(userinfoSelector);
@@ -59,7 +65,7 @@ function EmotionPopup({ activator, record, onSave }) {
   useEffect(() => {
     if (record) setDraft(record);
     else setDraft(getDraftSchema());
-  }, [open]);
+  }, [open, activator]);
 
   function setToDraft({ path, value }) {
     return setDraft((draft) => set(draft, path, value));
@@ -82,21 +88,22 @@ function EmotionPopup({ activator, record, onSave }) {
 
   return (
     <Fragment>
-      <Box
-        onClick={() => setOpen(true)}
-      >
-        {activator}
-      </Box>
+      {
+        // if activator is not a boolean, render it
+        typeof activator !== 'boolean' &&
+        <Box onClick={() => setOpen(true)}>
+          {activator}
+        </Box>
+      }
       <Modal
-        open={open}
-        onClose={() => setOpen(false)}
+        open={typeof activator === 'boolean' ? activator : open}
+        onClose={() => typeof activator === 'boolean' ? onClose() : setOpen(false)}
       >
         <ModalDialog
           color="neutral"
-          layout="fullscreen"
         >
           <ModalClose />
-          <form className="p-4 w-6/12 bg-slate-300">
+          <form>
             <Typography level="h1">
               {t('emotions.title')}
             </Typography>
@@ -116,7 +123,10 @@ function EmotionPopup({ activator, record, onSave }) {
             <Textarea
               value={draft.description}
               placeholder={t('emotions.description')}
-              onChange={(e) => setToDraft({ value: e.target.value, path: 'description' })}
+              onChange={(e) => setToDraft({
+                value: e.target.value,
+                path: 'description',
+              })}
               minRows={3}
             ></Textarea>
             <Button
@@ -131,7 +141,10 @@ function EmotionPopup({ activator, record, onSave }) {
 }
 
 EmotionPopup.propTypes = {
-  activator: PropTypes.element.isRequired,
+  activator: PropTypes.oneOfType([
+    PropTypes.element,
+    PropTypes.bool,
+  ]).isRequired,
   record: PropTypes.shape({
     id: PropTypes.string.isRequired,
     emotion: PropTypes.string.isRequired,
@@ -139,6 +152,6 @@ EmotionPopup.propTypes = {
     description: PropTypes.string,
   }),
   onSave: PropTypes.func,
-}
+};
 
 export default EmotionPopup;

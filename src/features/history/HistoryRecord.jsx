@@ -3,54 +3,86 @@ import {
   IconButton,
   Card,
   Typography,
+  Chip,
+  ButtonGroup,
 } from '@mui/joy';
 import PropTypes from 'prop-types';
-import { Edit, Delete } from '@mui/icons-material';
-import EmotionPopup from '../emotion-popup/EmotionPopup.jsx';
+import { useMemo } from 'react';
+import { Edit, Delete, Visibility } from '@mui/icons-material';
 
-function HistoryRecord({ record, onEdit, onDelete }) {
+function HistoryRecord({
+                         record,
+                         onView,
+                         onEdit,
+                         onDelete,
+                       }) {
+
+  const description = useMemo(() => {
+    const maxSize = 180;
+    return record.description.length < maxSize
+      ? record.description
+      : `${record.description.slice(0, maxSize)}...`;
+  }, [record.description]);
+
   return (
     <Card
       component="article"
       variant="soft"
     >
       <Box component="header">
-        <Typography
-          variant="title1"
-          component="h2"
-        >
+        <Typography level="title-md">
           {record.emotion}
         </Typography>
-        <Typography
-          variant="subtitle1"
-          component="h3"
-        >
-          {new Date(record.createdAt).toLocaleDateString()}
-        </Typography>
       </Box>
-      <Box component="section">
+      <Box component="section" sx={{ display: 'flex', gap: 0.5 }}>
         {record.cause.map((cause) => (
-          <Box key={cause}>{cause}</Box>
+          <Chip
+            key={cause}
+            color="primary"
+            variant="solid"
+          >{cause}</Chip>
         ))}
       </Box>
-      <Box component="p">{record.description}</Box>
-      <Box component="footer">
-        {new Date().toLocaleString()}
-        <EmotionPopup
-          activator={
-            <IconButton variant="plain">
-              <Edit></Edit>
-            </IconButton>
-          }
-          record={record}
-          onSave={() => onEdit(record)}
-        ></EmotionPopup>
-        <IconButton
-          variant="plain"
-          onClick={() => onDelete(record)}
+      <Typography
+        level="body-md"
+        component="p"
+      >
+        {description}
+      </Typography>
+      <Box
+        component="footer"
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+        }}
+      >
+        <Typography level="body-sm">
+          {new Date(record.createdAt).toLocaleDateString()}
+        </Typography>
+        <ButtonGroup
+          variant="soft"
+          spacing={0.5}
         >
-          <Delete></Delete>
-        </IconButton>
+          <IconButton
+            variant="soft"
+            onClick={() => onView(record)}
+          >
+            <Visibility />
+          </IconButton>
+          <IconButton
+            variant="soft"
+            onClick={() => onEdit(record)}
+          >
+            <Edit />
+          </IconButton>
+          <IconButton
+            variant="soft"
+            onClick={() => onDelete(record)}
+          >
+            <Delete />
+          </IconButton>
+        </ButtonGroup>
       </Box>
     </Card>
   );

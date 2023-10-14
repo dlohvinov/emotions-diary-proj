@@ -20,8 +20,8 @@ import {
   ModalDialog,
   Typography, Box,
 } from '@mui/joy';
-import { instanceSelector } from '../firebase/firebaseSlice.js';
-import { userinfoSelector } from '../auth/authSlice.js';
+import { instanceSelector } from '../../features/firebase/firebaseSlice.js';
+import { userinfoSelector } from '../../features/auth/authSlice.js';
 
 const getDraftSchema = () => ({
   feelings: [],

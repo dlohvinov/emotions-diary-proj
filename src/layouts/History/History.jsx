@@ -10,19 +10,19 @@ import {
   query,
   where,
   getDoc,
+  orderBy,
 } from 'firebase/firestore';
 import { useSelector } from 'react-redux';
 import { instanceSelector } from '../../features/firebase/firebaseSlice.js';
 import HistoryRecord from './HistoryRecord.jsx';
 import { userinfoSelector } from '../../features/auth/authSlice.js';
-import LogPopup from '../../features/LogPopup/LogPopup.jsx';
+import LogPopup from '../LogPopup/LogPopup.jsx';
 
 function History() {
   const { t } = useTranslation();
 
   const [records, setRecords] = useState([]);
   const [reviewedRecord, setReviewedRecord] = useState(null);
-  const [reviewedRecordMode, setReviewedRecordMode] = useState(null);
 
   const userinfo = useSelector(userinfoSelector);
   const instance = useSelector(instanceSelector);
@@ -30,7 +30,7 @@ function History() {
 
   useEffect(() => {
     if (!userinfo) return;
-    const q = query(collection(db, 'logs'), where('uid', '==', userinfo.uid));
+    const q = query(collection(db, 'logs'), where('uid', '==', userinfo.uid), orderBy('createdAt', 'desc'));
     const unsubscribe = onSnapshot(q, async (docSnapshot) => {
       const records = [];
       for (const doc of docSnapshot.docs) {
@@ -104,21 +104,6 @@ function History() {
     await deleteDoc(doc(db, 'logs', record.id));
   }
 
-  function viewRecord(record) {
-    setReviewedRecord(record);
-    setReviewedRecordMode('view');
-  }
-
-  function editRecord(record) {
-    setReviewedRecord(record);
-    setReviewedRecordMode('edit');
-  }
-
-  function handleEmotionPopupClose() {
-    setReviewedRecord(null);
-    setReviewedRecordMode(null);
-  }
-
   return (
     <Box
       component="section"
@@ -134,8 +119,7 @@ function History() {
       <LogPopup
         activator={!!reviewedRecord}
         record={reviewedRecord}
-        mode={reviewedRecordMode}
-        onClose={handleEmotionPopupClose}
+        onClose={() => setReviewedRecord(null)}
       ></LogPopup>
       <Box component="header">
         Searchbar goes here
@@ -164,8 +148,7 @@ function History() {
           <HistoryRecord
             key={record.id}
             record={record}
-            onView={viewRecord}
-            onEdit={editRecord}
+            onEdit={() => setReviewedRecord(record)}
             onDelete={deleteRecord}
           ></HistoryRecord>
         ))}

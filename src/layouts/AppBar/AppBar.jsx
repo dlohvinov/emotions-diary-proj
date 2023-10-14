@@ -6,7 +6,7 @@ import {
 } from '@mui/joy';
 import { DateRangePicker } from '@tremor/react';
 import { useTranslation } from 'react-i18next';
-import LogPopup from '../../features/LogPopup/LogPopup.jsx';
+import LogPopup from '../LogPopup/LogPopup.jsx';
 import UserProfile from '../../features/user/UserProfile.jsx';
 import DarkModeSwitch from './DarkModeSwitch.jsx';
 
@@ -29,10 +29,10 @@ function AppBar() {
         <Grid xs={3}>
           <DarkModeSwitch />
         </Grid>
-        <Grid xs={6} sx={{ display: 'flex', justifyContent: 'center' }}>
+        <Grid xs={6} className="flex justify-center">
           <DateRangePicker></DateRangePicker>
         </Grid>
-        <Grid xs={3} sx={{ display: 'flex' }} gap={1} justifyContent="flex-end">
+        <Grid xs={3} gap={1} className="flex align-center justify-end">
           <LogPopup
             activator={<Button>Add entry</Button>}
           ></LogPopup>

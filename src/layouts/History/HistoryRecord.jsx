@@ -9,13 +9,12 @@ import {
   useTheme,
 } from '@mui/joy';
 import PropTypes from 'prop-types';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Edit, Delete, Visibility } from '@mui/icons-material';
+import { Edit, Delete } from '@mui/icons-material';
 
 function HistoryRecord({
                          record,
-                         onView,
                          onEdit,
                          onDelete,
                        }) {
@@ -23,12 +22,16 @@ function HistoryRecord({
   const { t } = useTranslation();
   const theme = useTheme();
 
+  const [showFull, setShowFull] = useState(false);
+
+  const maxSize = 180;
+  const isDescriptionOverflow = record.description.length > maxSize;
+
   const description = useMemo(() => {
-    const maxSize = 180;
-    return record.description.length < maxSize
+    return (!isDescriptionOverflow || showFull)
       ? record.description
       : `${record.description.slice(0, maxSize)}...`;
-  }, [record.description]);
+  }, [showFull]);
 
   return (
     <Card
@@ -65,9 +68,16 @@ function HistoryRecord({
       >
         {description}
       </Typography>
-      <Button
-        width="100%"
-      >{t('morr')}</Button>
+      {
+        isDescriptionOverflow &&
+        <Button
+          variant="plain"
+          width="100%"
+          onClick={() => setShowFull(!showFull)}
+        >
+          {showFull ? t('les') : t('morr')}
+        </Button>
+      }
       <Box
         component="footer"
         sx={{
@@ -83,12 +93,6 @@ function HistoryRecord({
           variant="soft"
           spacing={0.5}
         >
-          <IconButton
-            variant="soft"
-            onClick={() => onView(record)}
-          >
-            <Visibility />
-          </IconButton>
           <IconButton
             variant="soft"
             onClick={() => onEdit(record)}
@@ -114,7 +118,6 @@ HistoryRecord.propTypes = {
     description: PropTypes.string,
     createdAt: PropTypes.number.isRequired,
   }).isRequired,
-  onView: PropTypes.func.isRequired,
   onEdit: PropTypes.func.isRequired,
   onDelete: PropTypes.func.isRequired,
 };

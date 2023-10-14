@@ -16,11 +16,10 @@ function MainPage() {
     >
       <AppBar />
       <Grid
-        spacing={2}
         sx={{
           flexGrow: 2,
-          p: 2,
           minHeight: 0,
+          p: 2,
         }}
         container
       >

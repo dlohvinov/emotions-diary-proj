@@ -128,7 +128,7 @@ function History() {
         bgcolor: 'background.surface',
         boxShadow: 'md',
         p: 2,
-        overflow: 'scroll',
+        overflowY: 'auto',
       }}
     >
       <LogPopup

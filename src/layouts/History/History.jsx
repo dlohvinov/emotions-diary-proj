@@ -1,6 +1,6 @@
-import { Box } from '@mui/joy';
+import { Box, Chip } from '@mui/joy';
 import { useTranslation } from 'react-i18next';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import {
   getFirestore,
   collection,
@@ -56,6 +56,50 @@ function History() {
     return unsubscribe;
   }, [userinfo]);
 
+  const countFeelings = useMemo(() => {
+    return records.reduce((acc, cur) => {
+      cur.feelings.forEach((feeling) => {
+        if (acc[feeling.name]) {
+          acc[feeling.name] += 1;
+        } else {
+          acc[feeling.name] = 1;
+        }
+      });
+      return acc;
+    }, {});
+  }, [records]);
+
+  const countCauses = useMemo(() => {
+    return records.reduce((acc, cur) => {
+      cur.causes.forEach((cause) => {
+        if (acc[cause.name]) {
+          acc[cause.name] += 1;
+        } else {
+          acc[cause.name] = 1;
+        }
+      });
+      return acc;
+    }, {});
+  }, [records]);
+
+  const existingCauses = useMemo(() => {
+    return Object.keys(countCauses);
+  }, [countCauses]);
+
+  const top5Feelings = useMemo(() => {
+    return Object.entries(countFeelings)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 5)
+    .map(([name, count]) => (name));
+  }, [countFeelings]);
+
+  const top5Causes = useMemo(() => {
+    return Object.entries(countCauses)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 5)
+    .map(([name, count]) => (name));
+  }, [countCauses]);
+
   async function deleteRecord(record) {
     await deleteDoc(doc(db, 'logs', record.id));
   }
@@ -84,6 +128,7 @@ function History() {
         bgcolor: 'background.surface',
         boxShadow: 'md',
         p: 2,
+        overflow: 'scroll',
       }}
     >
       <LogPopup
@@ -95,6 +140,18 @@ function History() {
       <Box component="header">
         Searchbar goes here
         Then go most common emotions | causes
+        <Box component="section">
+          Most used feelings:
+          {top5Feelings.map((feeling) => (
+            <Chip key={feeling}>{feeling}</Chip>
+          ))}
+        </Box>
+        <Box component="section">
+          Most used causes:
+          {top5Causes.map((cause) => (
+            <Chip key={cause}>{cause}</Chip>
+          ))}
+        </Box>
       </Box>
       <Box
         component="section" sx={{

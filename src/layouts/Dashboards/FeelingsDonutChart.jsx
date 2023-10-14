@@ -63,7 +63,7 @@ function FeelingsDonutChart() {
 
 
   return (
-    <Card className="max-w-lg">
+    <Card className="w-full">
       <Title>{t('Feelings count')}</Title>
       <DonutChart
         className="mt-6"

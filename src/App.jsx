@@ -1,6 +1,6 @@
-import { createTheme } from '@mui/system';
+import { extendTheme } from '@mui/joy/styles';
 import { useDispatch } from 'react-redux';
-import { ThemeProvider } from '@mui/joy';
+import { CssVarsProvider } from '@mui/joy';
 import Auth from './features/auth/Auth.jsx';
 import MainPage from './pages/MainPage/MainPage.jsx';
 import {
@@ -13,10 +13,13 @@ function App() {
   dispatch(initializeFirebase());
   dispatch(initializeAuth());
 
+  // const { mode, setMode } = useColorScheme();
+  // setMode('dark');
+
   /**
    * Don't know why, but injecting colors directly to palette doesn't work :(
    */
-  const theme = createTheme({
+  const theme = extendTheme({
     features: {
       feelings: '#FF6F59',
       causes: '#AB92BF',
@@ -24,10 +27,10 @@ function App() {
   });
 
   return (
-    <ThemeProvider theme={theme}>
+    <CssVarsProvider theme={theme}>
       <MainPage></MainPage>
       {/*<Auth></Auth>*/}
-    </ThemeProvider>
+    </CssVarsProvider>
   );
 }
 

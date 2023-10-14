@@ -1,5 +1,6 @@
 import {
   Box,
+  Button,
   IconButton,
   Card,
   Typography,
@@ -9,6 +10,7 @@ import {
 } from '@mui/joy';
 import PropTypes from 'prop-types';
 import { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Edit, Delete, Visibility } from '@mui/icons-material';
 
 function HistoryRecord({
@@ -18,6 +20,7 @@ function HistoryRecord({
                          onDelete,
                        }) {
 
+  const { t } = useTranslation();
   const theme = useTheme();
 
   const description = useMemo(() => {
@@ -62,6 +65,9 @@ function HistoryRecord({
       >
         {description}
       </Typography>
+      <Button
+        width="100%"
+      >{t('morr')}</Button>
       <Box
         component="footer"
         sx={{

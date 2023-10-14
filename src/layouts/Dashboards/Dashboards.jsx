@@ -18,6 +18,7 @@ function Dashboards() {
         boxShadow: 'md',
         flexDirection: 'column',
         gap: 2,
+        overflow: 'scroll',
       }}
     >
       <Typography level="h2">

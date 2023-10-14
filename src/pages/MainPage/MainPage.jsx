@@ -11,6 +11,7 @@ function MainPage() {
         height: '100vh',
         display: 'flex',
         flexDirection: 'column',
+        bgcolor: 'background.body',
       }}
     >
       <AppBar />
@@ -19,13 +20,20 @@ function MainPage() {
         sx={{
           flexGrow: 2,
           p: 2,
+          minHeight: 0,
         }}
         container
       >
-        <Grid md={5}>
+        <Grid
+          md={5}
+          sx={{ height: '100%' }}
+        >
           <History />
         </Grid>
-        <Grid md={7}>
+        <Grid
+          md={7}
+          sx={{ height: '100%' }}
+        >
           <Dashboards />
         </Grid>
       </Grid>

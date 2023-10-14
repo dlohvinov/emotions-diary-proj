@@ -1,9 +1,9 @@
 import { Grid, Typography, Box, useTheme, Button } from '@mui/joy';
 import { useTranslation } from 'react-i18next';
-import EmotionPopup from '../emotion-popup/EmotionPopup.jsx';
-import UserProfile from '../user/UserProfile.jsx';
+import LogPopup from '../../features/LogPopup/LogPopup.jsx';
+import UserProfile from '../../features/user/UserProfile.jsx';
 
-function AppHeader() {
+function AppBar() {
   const { t } = useTranslation();
 
   const theme = useTheme();
@@ -14,11 +14,11 @@ function AppHeader() {
       component="header"
       sx={{
         boxShadow: 'md',
-        p: 1,
+        p: 2,
         bgcolor: 'background.surface',
       }}
     >
-      <Grid container spacing={1}>
+      <Grid container spacing={2}>
         <Grid xs={3}>
           <Typography
             className="app-header__title"
@@ -30,9 +30,9 @@ function AppHeader() {
           Datepicker goes here
         </Grid>
         <Grid xs={3} sx={{ display: 'flex' }} gap={1} justifyContent="flex-end">
-          <EmotionPopup
+          <LogPopup
             activator={<Button>Add entry</Button>}
-          ></EmotionPopup>
+          ></LogPopup>
           <UserProfile></UserProfile>
         </Grid>
       </Grid>
@@ -40,4 +40,4 @@ function AppHeader() {
   );
 }
 
-export default AppHeader;
+export default AppBar;

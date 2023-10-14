@@ -1,7 +1,7 @@
 import { Box, Grid } from '@mui/joy';
-import AppHeader from '../app-header/AppHeader.jsx';
-import History from '../history/History.jsx';
-import Dashboards from '../dashboards/Dashboards.jsx';
+import AppBar from '../../layouts/AppBar/AppBar.jsx';
+import History from '../../layouts/History/History.jsx';
+import Dashboards from '../../layouts/Dashboards/Dashboards.jsx';
 
 function MainPage() {
   return (
@@ -13,12 +13,12 @@ function MainPage() {
         flexDirection: 'column',
       }}
     >
-      <AppHeader></AppHeader>
+      <AppBar />
       <Grid
-        spacing={1}
+        spacing={2}
         sx={{
-          flexGrow: 1,
-          p: 1,
+          flexGrow: 2,
+          p: 2,
         }}
         container
       >

@@ -9,12 +9,13 @@ import {
   onSnapshot,
   query,
   where,
+  getDoc,
 } from 'firebase/firestore';
 import { useSelector } from 'react-redux';
-import { instanceSelector } from '../firebase/firebaseSlice.js';
+import { instanceSelector } from '../../features/firebase/firebaseSlice.js';
 import HistoryRecord from './HistoryRecord.jsx';
-import { userinfoSelector } from '../auth/authSlice.js';
-import EmotionPopup from '../emotion-popup/EmotionPopup.jsx';
+import { userinfoSelector } from '../../features/auth/authSlice.js';
+import LogPopup from '../../features/LogPopup/LogPopup.jsx';
 
 function History() {
   const { t } = useTranslation();
@@ -29,18 +30,34 @@ function History() {
 
   useEffect(() => {
     if (!userinfo) return;
-    const q = query(collection(db, 'emotions'), where('uid', '==', userinfo.uid));
-    const unsubscribe = onSnapshot(q, (docSnapshot) => {
-      setRecords(docSnapshot.docs.map((doc) => ({
-        ...doc.data(),
-        id: doc.id,
-      })));
+    const q = query(collection(db, 'logs'), where('uid', '==', userinfo.uid));
+    const unsubscribe = onSnapshot(q, async (docSnapshot) => {
+      const records = [];
+      for (const doc of docSnapshot.docs) {
+        const feelings = [];
+        for (const feeling of doc.data().feelings) {
+          feelings.push((await getDoc(feeling)).data());
+        }
+        const causes = [];
+        for (const cause of doc.data().causes) {
+          causes.push((await getDoc(cause)).data());
+        }
+        const record = {
+          ...doc.data(),
+          feelings,
+          causes,
+          id: doc.id,
+        };
+
+        records.push(record);
+      }
+      setRecords(records);
     });
     return unsubscribe;
   }, [userinfo]);
 
   async function deleteRecord(record) {
-    await deleteDoc(doc(db, 'emotions', record.id));
+    await deleteDoc(doc(db, 'logs', record.id));
   }
 
   function viewRecord(record) {
@@ -66,15 +83,15 @@ function History() {
         minHeight: 0,
         bgcolor: 'background.surface',
         boxShadow: 'md',
-        p: 1,
+        p: 2,
       }}
     >
-      <EmotionPopup
+      <LogPopup
         activator={!!reviewedRecord}
         record={reviewedRecord}
         mode={reviewedRecordMode}
         onClose={handleEmotionPopupClose}
-      ></EmotionPopup>
+      ></LogPopup>
       <Box component="header">
         Searchbar goes here
         Then go most common emotions | causes
@@ -83,7 +100,7 @@ function History() {
         component="section" sx={{
         display: 'flex',
         flexDirection: 'column',
-        gap: 1,
+        gap: 2,
       }}
       >
         {records.map((record) => (

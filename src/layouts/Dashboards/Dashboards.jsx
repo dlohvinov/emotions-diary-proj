@@ -7,7 +7,7 @@ function Dashboards() {
         height: '100%',
         minHeight: 0,
         display: 'flex',
-        p: 1,
+        p: 2,
         justifyContent: 'center',
         alignItems: 'center',
         bgcolor: 'background.surface',

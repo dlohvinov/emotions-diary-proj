@@ -5,6 +5,7 @@ import {
   Typography,
   Chip,
   ButtonGroup,
+  useTheme,
 } from '@mui/joy';
 import PropTypes from 'prop-types';
 import { useMemo } from 'react';
@@ -16,6 +17,8 @@ function HistoryRecord({
                          onEdit,
                          onDelete,
                        }) {
+
+  const theme = useTheme();
 
   const description = useMemo(() => {
     const maxSize = 180;
@@ -29,18 +32,22 @@ function HistoryRecord({
       component="article"
       variant="soft"
     >
-      <Box component="header">
-        <Typography level="title-md">
-          {record.emotion}
-        </Typography>
+      <Box component="header" sx={{ display: 'flex', gap: 0.5 }}>
+        {record.feelings.map((feeling) => (
+          <Chip
+            key={feeling.name}
+            variant="solid"
+            sx={{ bgcolor: theme.features.feelings }}
+          >{feeling.name}</Chip>
+        ))}
       </Box>
       <Box component="section" sx={{ display: 'flex', gap: 0.5 }}>
-        {record.cause.map((cause) => (
+        {record.causes.map((cause) => (
           <Chip
-            key={cause}
-            color="primary"
+            key={cause.name}
             variant="solid"
-          >{cause}</Chip>
+            sx={{ bgcolor: theme.features.causes }}
+          >{cause.name}</Chip>
         ))}
       </Box>
       <Typography
@@ -90,10 +97,12 @@ function HistoryRecord({
 
 HistoryRecord.propTypes = {
   record: PropTypes.shape({
-    emotion: PropTypes.string.isRequired,
-    cause: PropTypes.arrayOf(PropTypes.string).isRequired,
+    feelings: PropTypes.arrayOf(PropTypes.shape({ name: PropTypes.string })).isRequired,
+    causes: PropTypes.arrayOf(PropTypes.shape({ name: PropTypes.string })).isRequired,
     description: PropTypes.string,
+    createdAt: PropTypes.number.isRequired,
   }).isRequired,
+  onView: PropTypes.func.isRequired,
   onEdit: PropTypes.func.isRequired,
   onDelete: PropTypes.func.isRequired,
 };

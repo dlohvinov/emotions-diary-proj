@@ -70,12 +70,10 @@ function FeelingsDonutChart() {
         data={aggFeelingsCount}
         category="count"
         index="name"
-        colors={['slate', 'violet', 'indigo', 'rose', 'cyan', 'amber']}
       />
       <Legend
         className="mt-6"
         categories={legend}
-        colors={['slate', 'violet', 'indigo', 'rose', 'cyan', 'amber']}
       ></Legend>
     </Card>
   );

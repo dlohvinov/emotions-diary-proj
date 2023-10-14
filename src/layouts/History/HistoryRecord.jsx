@@ -32,7 +32,10 @@ function HistoryRecord({
       component="article"
       variant="soft"
     >
-      <Box component="header" sx={{ display: 'flex', gap: 0.5 }}>
+      <Box
+        component="header"
+        sx={{ display: 'flex', gap: 0.5, flexWrap: 'wrap' }}
+      >
         {record.feelings.map((feeling) => (
           <Chip
             key={feeling.name}
@@ -41,7 +44,10 @@ function HistoryRecord({
           >{feeling.name}</Chip>
         ))}
       </Box>
-      <Box component="section" sx={{ display: 'flex', gap: 0.5 }}>
+      <Box
+        component="section"
+        sx={{ display: 'flex', gap: 0.5, flexWrap: 'wrap' }}
+      >
         {record.causes.map((cause) => (
           <Chip
             key={cause.name}

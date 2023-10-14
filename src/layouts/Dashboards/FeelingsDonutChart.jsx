@@ -1,4 +1,4 @@
-import { Card, Title, DonutChart } from '@tremor/react';
+import { Card, Title, DonutChart, Legend } from '@tremor/react';
 import {
   collection, getDoc,
   getFirestore,
@@ -57,6 +57,10 @@ function FeelingsDonutChart() {
     return Object.entries(map).map(([name, count]) => ({ name, count }));
   }, [rawData]);
 
+  const legend = useMemo(() => {
+    return aggFeelingsCount.map(({ name }) => name);
+  }, [aggFeelingsCount]);
+
 
   return (
     <Card className="max-w-lg">
@@ -68,6 +72,11 @@ function FeelingsDonutChart() {
         index="name"
         colors={['slate', 'violet', 'indigo', 'rose', 'cyan', 'amber']}
       />
+      <Legend
+        className="mt-6"
+        categories={legend}
+        colors={['slate', 'violet', 'indigo', 'rose', 'cyan', 'amber']}
+      ></Legend>
     </Card>
   );
 }

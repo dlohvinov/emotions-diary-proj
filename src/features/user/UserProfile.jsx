@@ -13,13 +13,13 @@ import {
 import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 import { Logout, LoginSharp } from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
-import { userinfoSelector, authSelector } from '../auth/authSlice.js';
+import { selectUserinfo, authSelector } from '../auth/authSlice.js';
 
 function UserProfile() {
   const { t } = useTranslation();
 
   const auth = useSelector(authSelector);
-  const userinfo = useSelector(userinfoSelector);
+  const userinfo = useSelector(selectUserinfo);
 
   function signIn() {
     return signInWithPopup(auth, new GoogleAuthProvider());

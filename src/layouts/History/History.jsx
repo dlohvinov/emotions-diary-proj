@@ -15,7 +15,7 @@ import {
 import { useSelector } from 'react-redux';
 import { instanceSelector } from '../../features/firebase/firebaseSlice.js';
 import HistoryRecord from './HistoryRecord.jsx';
-import { userinfoSelector } from '../../features/auth/authSlice.js';
+import { selectUserinfo } from '../../features/auth/authSlice.js';
 import LogPopup from '../LogPopup/LogPopup.jsx';
 
 function History() {
@@ -24,7 +24,7 @@ function History() {
   const [records, setRecords] = useState([]);
   const [reviewedRecord, setReviewedRecord] = useState(null);
 
-  const userinfo = useSelector(userinfoSelector);
+  const userinfo = useSelector(selectUserinfo);
   const instance = useSelector(instanceSelector);
   const db = getFirestore(instance);
 

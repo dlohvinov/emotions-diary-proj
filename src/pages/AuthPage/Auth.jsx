@@ -6,13 +6,13 @@ import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 import { useSelector } from 'react-redux';
 import {
   authSelector,
-  userinfoSelector,
-} from './authSlice.js';
-import AuthForm from './AuthForm.jsx';
+  selectUserinfo,
+} from '../../features/auth/authSlice.js';
+import AuthForm from '../../features/auth/AuthForm.jsx';
 
 function Auth() {
   const auth = useSelector(authSelector);
-  const userinfo = useSelector(userinfoSelector);
+  const userinfo = useSelector(selectUserinfo);
   window.auth = auth;
 
  const sin = () => {

@@ -1,12 +1,12 @@
 import { extendTheme } from '@mui/joy/styles';
 import { useDispatch } from 'react-redux';
 import { CssVarsProvider } from '@mui/joy';
-import Auth from './features/auth/Auth.jsx';
-import MainPage from './pages/MainPage/MainPage.jsx';
+import Auth from '../pages/AuthPage/Auth.jsx';
+import MainPage from '../pages/MainPage/MainPage.jsx';
 import {
   initializeFirebase,
 } from './features/firebase/firebaseSlice.js';
-import { initializeAuth } from './features/auth/authSlice.js';
+import { initializeAuth } from '../features/auth/authSlice.js';
 
 function App() {
   const dispatch = useDispatch();

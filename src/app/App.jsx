@@ -1,20 +1,19 @@
 import { extendTheme } from '@mui/joy/styles';
 import { useDispatch } from 'react-redux';
 import { CssVarsProvider } from '@mui/joy';
-import Auth from '../pages/AuthPage/Auth.jsx';
+// import Auth from '../pages/AuthPage/Auth.jsx';
 import MainPage from '../pages/MainPage/MainPage.jsx';
-import {
-  initializeFirebase,
-} from './features/firebase/firebaseSlice.js';
 import { initializeAuth } from '../features/auth/authSlice.js';
+import { fetchHistory } from '../layouts/History/historySlice.js';
 
 function App() {
   const dispatch = useDispatch();
-  dispatch(initializeFirebase());
-  dispatch(initializeAuth());
 
-  // const { mode, setMode } = useColorScheme();
-  // setMode('dark');
+  const initializeApp = async () => {
+    await dispatch(initializeAuth()).unwrap();
+    return dispatch(fetchHistory()).unwrap();
+  }
+  initializeApp();
 
   /**
    * Don't know why, but injecting colors directly to palette doesn't work :(

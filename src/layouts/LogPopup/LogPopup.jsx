@@ -20,7 +20,7 @@ import {
   ModalDialog,
   Typography, Box,
 } from '@mui/joy';
-import { instanceSelector } from '../../features/firebase/firebaseSlice.js';
+import { getApp } from 'firebase/app';
 import { selectUserinfo } from '../../features/auth/authSlice.js';
 
 const getDraftSchema = () => ({
@@ -39,9 +39,8 @@ function LogPopup({
   const { t } = useTranslation();
 
   const userinfo = useSelector(selectUserinfo);
-  const instance = useSelector(instanceSelector);
 
-  const db = getFirestore(instance);
+  const db = getFirestore(getApp());
 
   const [open, setOpen] = useState(false);
 

@@ -10,8 +10,8 @@ import {
 import { useSelector } from 'react-redux';
 import { useEffect, useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { getApp } from 'firebase/app';
 import { selectUserinfo } from '../../features/auth/authSlice.js';
-import { instanceSelector } from '../../features/firebase/firebaseSlice.js';
 
 function CausesByFeelingsBar() {
   const { t } = useTranslation();
@@ -19,11 +19,11 @@ function CausesByFeelingsBar() {
   const [records, setRecords] = useState([]);
 
   const userinfo = useSelector(selectUserinfo);
-  const instance = useSelector(instanceSelector);
-  const db = getFirestore(instance);
+  const db = getFirestore(getApp());
 
   useEffect(() => {
     if (!userinfo) return;
+    console.info(userinfo);
     const q = query(collection(db, 'logs'), where('uid', '==', userinfo.uid));
     const unsubscribe = onSnapshot(q, async (docSnapshot) => {
       const records = [];

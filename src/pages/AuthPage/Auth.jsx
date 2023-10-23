@@ -2,21 +2,18 @@
 // import { auth as firebaseuiAuth } from 'firebaseui';
 import { Button } from '@mui/joy';
 // import 'firebaseui/dist/firebaseui.css';
-import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
+import { GoogleAuthProvider, signInWithPopup, getAuth } from 'firebase/auth';
 import { useSelector } from 'react-redux';
 import {
-  authSelector,
   selectUserinfo,
 } from '../../features/auth/authSlice.js';
 import AuthForm from '../../features/auth/AuthForm.jsx';
 
 function Auth() {
-  const auth = useSelector(authSelector);
   const userinfo = useSelector(selectUserinfo);
-  window.auth = auth;
 
  const sin = () => {
-   signInWithPopup(auth, new GoogleAuthProvider())
+   signInWithPopup(getAuth(), new GoogleAuthProvider())
    .then((result) => {
      // This gives you a Google Access Token. You can use it to access the Google API.
      const credential = GoogleAuthProvider.credentialFromResult(result);

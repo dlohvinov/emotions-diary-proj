@@ -1,60 +1,18 @@
 import { Box, Chip } from '@mui/joy';
 import { useTranslation } from 'react-i18next';
-import { useEffect, useState, useMemo } from 'react';
-import {
-  getFirestore,
-  collection,
-  deleteDoc,
-  doc,
-  onSnapshot,
-  query,
-  where,
-  getDoc,
-  orderBy,
-} from 'firebase/firestore';
-import { useSelector } from 'react-redux';
-import { instanceSelector } from '../../features/firebase/firebaseSlice.js';
+import { useState, useMemo } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { deleteHistory, fetchHistory } from './historySlice.js';
 import HistoryRecord from './HistoryRecord.jsx';
-import { selectUserinfo } from '../../features/auth/authSlice.js';
 import LogPopup from '../LogPopup/LogPopup.jsx';
 
 function History() {
   const { t } = useTranslation();
+  const dispatch = useDispatch();
 
-  const [records, setRecords] = useState([]);
+  const records = useSelector((state) => state.history.history);
+
   const [reviewedRecord, setReviewedRecord] = useState(null);
-
-  const userinfo = useSelector(selectUserinfo);
-  const instance = useSelector(instanceSelector);
-  const db = getFirestore(instance);
-
-  useEffect(() => {
-    if (!userinfo) return;
-    const q = query(collection(db, 'logs'), where('uid', '==', userinfo.uid), orderBy('createdAt', 'desc'));
-    const unsubscribe = onSnapshot(q, async (docSnapshot) => {
-      const records = [];
-      for (const doc of docSnapshot.docs) {
-        const feelings = [];
-        for (const feeling of doc.data().feelings) {
-          feelings.push((await getDoc(feeling)).data());
-        }
-        const causes = [];
-        for (const cause of doc.data().causes) {
-          causes.push((await getDoc(cause)).data());
-        }
-        const record = {
-          ...doc.data(),
-          feelings,
-          causes,
-          id: doc.id,
-        };
-
-        records.push(record);
-      }
-      setRecords(records);
-    });
-    return unsubscribe;
-  }, [userinfo]);
 
   const countFeelings = useMemo(() => {
     return records.reduce((acc, cur) => {
@@ -101,7 +59,8 @@ function History() {
   }, [countCauses]);
 
   async function deleteRecord(record) {
-    await deleteDoc(doc(db, 'logs', record.id));
+    await dispatch(deleteHistory(record)).unwrap();
+    return dispatch(fetchHistory()).unwrap();
   }
 
   return (

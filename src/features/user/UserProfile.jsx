@@ -10,19 +10,18 @@ import {
   Box,
   Typography,
 } from '@mui/joy';
-import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
+import { getAuth, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 import { Logout, LoginSharp } from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
-import { selectUserinfo, authSelector } from '../auth/authSlice.js';
+import { selectUserinfo } from '../auth/authSlice.js';
 
 function UserProfile() {
   const { t } = useTranslation();
 
-  const auth = useSelector(authSelector);
   const userinfo = useSelector(selectUserinfo);
 
   function signIn() {
-    return signInWithPopup(auth, new GoogleAuthProvider());
+    return signInWithPopup(getAuth(), new GoogleAuthProvider());
   }
 
   return (

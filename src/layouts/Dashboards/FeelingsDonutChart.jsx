@@ -1,4 +1,5 @@
 import { Card, Title, DonutChart, Legend } from '@tremor/react';
+import { getApp } from 'firebase/app';
 import {
   collection, getDoc,
   getFirestore,
@@ -10,14 +11,12 @@ import { useSelector } from 'react-redux';
 import { useEffect, useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { selectUserinfo } from '../../features/auth/authSlice.js';
-import { instanceSelector } from '../../features/firebase/firebaseSlice.js';
 
 function FeelingsDonutChart() {
   const { t } = useTranslation();
 
   const userinfo = useSelector(selectUserinfo);
-  const instance = useSelector(instanceSelector);
-  const db = getFirestore(instance);
+  const db = getFirestore(getApp());
 
   const [rawData, setRawData] = useState([]);
 

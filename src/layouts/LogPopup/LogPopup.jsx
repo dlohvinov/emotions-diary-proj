@@ -9,11 +9,10 @@ import {
   collection,
   addDoc,
   setDoc,
-  doc, query, where, onSnapshot,
+  doc,
 } from 'firebase/firestore';
 import {
   Button,
-  Autocomplete,
   Textarea,
   Modal,
   ModalClose,
@@ -22,6 +21,9 @@ import {
 } from '@mui/joy';
 import { getApp } from 'firebase/app';
 import { selectUserinfo } from '../../features/auth/authSlice.js';
+import FeelingsAutocomplete
+  from '../../features/feelings/FeelingsAutocomplete.jsx';
+import CausesAutocomplete from '../../features/causes/CausesAutocomplete.jsx';
 
 const getDraftSchema = () => ({
   feelings: [],
@@ -45,34 +47,6 @@ function LogPopup({
   const [open, setOpen] = useState(false);
 
   const [draft, setDraft] = useImmer(getDraftSchema());
-
-  const [feelingsList, setFeelingsList] = useState([]);
-  const [causesList, setCausesList] = useState([]);
-
-  useEffect(() => {
-    if (!userinfo) return;
-
-    const feelingsQ = query(collection(db, 'feelings'));
-    const unsubscribeFeelings = onSnapshot(feelingsQ, (docSnapshot) => {
-      setFeelingsList(docSnapshot.docs.map((doc) => ({
-        ...doc.data(),
-        id: doc.id,
-      })));
-    });
-
-    const causesQ = query(collection(db, 'causes'));
-    const unsubscribeCauses = onSnapshot(causesQ, (docSnapshot) => {
-      setCausesList(docSnapshot.docs.map((doc) => ({
-        ...doc.data(),
-        id: doc.id,
-      })));
-    });
-
-    return () => {
-      unsubscribeFeelings();
-      unsubscribeCauses();
-    };
-  }, [userinfo]);
 
   useEffect(() => {
     if (record) setDraft(record);
@@ -135,30 +109,14 @@ function LogPopup({
             <Typography level="h1">
               {t('feelings.title')}
             </Typography>
-            {mode === 'view' ? (
-              <Typography level="title-md">
-                {draft.feelings}
-              </Typography>
-            ) : (
-              <Autocomplete
-                value={draft.feelings}
-                options={feelingsList}
-                placeholder={t('feelings.feeling')}
-                getOptionLabel={(option) => option.name}
-                disableCloseOnSelect
-                multiple
-                onChange={(e, value) => setToDraft({ value, path: 'feelings' })}
-              ></Autocomplete>
-            )}
-            <Autocomplete
+            <FeelingsAutocomplete
+              value={draft.feelings}
+              onChange={(e, value) => setToDraft({ value, path: 'feelings' })}
+            ></FeelingsAutocomplete>
+            <CausesAutocomplete
               value={draft.causes}
-              options={causesList}
-              placeholder={t('feelings.causes')}
-              getOptionLabel={(option) => option.name}
-              disableCloseOnSelect
-              multiple
               onChange={(e, value) => setToDraft({ value, path: 'causes' })}
-            ></Autocomplete>
+            ></CausesAutocomplete>
             <Textarea
               value={draft.description}
               placeholder={t('feelings.description')}

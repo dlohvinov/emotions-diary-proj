@@ -8,28 +8,28 @@ import { useTranslation } from 'react-i18next';
 import { useSelector, useDispatch } from 'react-redux';
 import { useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { fetchFeelings } from './feelingsSlice.js';
+import { fetchCauses } from './causesSlice.js';
 
-function FeelingsAutocomplete({
+function CausesAutocomplete({
                                 value,
                                 error = false,
                                 onChange,
                               }) {
   const { t } = useTranslation();
   const dispatch = useDispatch();
-  const feelingsList = useSelector((state) => state.feelings.feelings);
+  const causesList = useSelector((state) => state.causes.causes);
 
   useEffect(() => {
-    dispatch(fetchFeelings());
+    dispatch(fetchCauses());
   }, []);
 
   return (
     <FormControl error={error}>
-      <FormLabel>{t('feelings.feeling')}</FormLabel>
+      <FormLabel>{t('causes.cause')}</FormLabel>
       <Autocomplete
         value={value}
-        options={feelingsList}
-        placeholder={t('feelings.feeling')}
+        options={causesList}
+        placeholder={t('causes.cause')}
         getOptionLabel={(option) => option.name}
         disableCloseOnSelect
         multiple
@@ -40,10 +40,10 @@ function FeelingsAutocomplete({
   );
 }
 
-FeelingsAutocomplete.propTypes = {
+CausesAutocomplete.propTypes = {
   value: PropTypes.array.isRequired,
   error: PropTypes.bool,
   onChange: PropTypes.func.isRequired,
 };
 
-export default FeelingsAutocomplete;
+export default CausesAutocomplete;

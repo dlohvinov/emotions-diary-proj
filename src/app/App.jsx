@@ -1,19 +1,29 @@
-import { extendTheme } from '@mui/joy/styles';
-import { useDispatch } from 'react-redux';
 import { CssVarsProvider } from '@mui/joy';
+import { extendTheme } from '@mui/joy/styles';
+import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { initializeAuth } from '../features/auth/authSlice.js';
+import { fetchCauses } from '../features/causes/causesSlice.js';
+import { fetchFeelings } from '../features/feelings/feelingsSlice.js';
+import { fetchHistory } from '../layouts/History/historySlice.js';
 // import Auth from '../pages/AuthPage/Auth.jsx';
 import MainPage from '../pages/MainPage/MainPage.jsx';
-import { initializeAuth } from '../features/auth/authSlice.js';
-import { fetchHistory } from '../layouts/History/historySlice.js';
 
 function App() {
   const dispatch = useDispatch();
 
   const initializeApp = async () => {
     await dispatch(initializeAuth()).unwrap();
+    await Promise.allSettled([
+      dispatch(fetchFeelings()).unwrap(),
+      await dispatch(fetchCauses()).unwrap(),
+    ]);
     return dispatch(fetchHistory()).unwrap();
-  }
-  initializeApp();
+  };
+
+  useEffect(() => {
+    initializeApp();
+  }, []);
 
   /**
    * Don't know why, but injecting colors directly to palette doesn't work :(

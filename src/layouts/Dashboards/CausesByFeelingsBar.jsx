@@ -1,57 +1,16 @@
 import { Card, Title, BarChart, Subtitle } from '@tremor/react';
 import { Autocomplete } from '@mui/joy';
-import {
-  collection, getDoc,
-  getFirestore,
-  onSnapshot,
-  query,
-  where,
-} from 'firebase/firestore';
 import { useSelector } from 'react-redux';
-import { useEffect, useState, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { getApp } from 'firebase/app';
-import { selectUserinfo } from '../../features/auth/authSlice.js';
 
 function CausesByFeelingsBar() {
   const { t } = useTranslation();
 
-  const [records, setRecords] = useState([]);
-
-  const userinfo = useSelector(selectUserinfo);
-  const db = getFirestore(getApp());
-
-  useEffect(() => {
-    if (!userinfo) return;
-    console.info(userinfo);
-    const q = query(collection(db, 'logs'), where('uid', '==', userinfo.uid));
-    const unsubscribe = onSnapshot(q, async (docSnapshot) => {
-      const records = [];
-      for (const doc of docSnapshot.docs) {
-        const feelings = [];
-        for (const feeling of doc.data().feelings) {
-          feelings.push((await getDoc(feeling)).data());
-        }
-        const causes = [];
-        for (const cause of doc.data().causes) {
-          causes.push((await getDoc(cause)).data());
-        }
-        const record = {
-          ...doc.data(),
-          feelings,
-          causes,
-          id: doc.id,
-        };
-
-        records.push(record);
-      }
-      setRecords(records);
-    });
-    return unsubscribe;
-  }, [userinfo]);
+  const rawData = useSelector((state) => state.history.history);
 
   const aggCausesByFeelings = useMemo(() => {
-    const map = records.reduce((acc, cur) => {
+    const map = rawData.reduce((acc, cur) => {
       cur.feelings.forEach((feeling) => {
         if (acc[feeling.name]) {
           cur.causes.forEach((cause) => {
@@ -68,11 +27,11 @@ function CausesByFeelingsBar() {
       return acc;
     }, {});
     return Object.entries(map).map(([name, causes]) => ({ name, ...causes }));
-  }, [records]);
+  }, [rawData]);
 
   const existingCauses = useMemo(() => {
     const set = new Set();
-    records.forEach((record) => {
+    rawData.forEach((record) => {
       record.causes.forEach((cause) => {
         set.add(cause.name);
       });
@@ -82,7 +41,7 @@ function CausesByFeelingsBar() {
 
   const existingFeelings = useMemo(() => {
     const set = new Set();
-    records.forEach((record) => {
+    rawData.forEach((record) => {
       record.feelings.forEach((feeling) => {
         set.add(feeling.name);
       });

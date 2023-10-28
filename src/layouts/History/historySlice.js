@@ -2,14 +2,13 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { getApp } from 'firebase/app';
 import {
   collection,
-  getDoc,
+  deleteDoc,
+  doc,
   getDocs,
   getFirestore,
   orderBy,
   query,
   where,
-  deleteDoc,
-  doc,
 } from 'firebase/firestore';
 import LoadingStatus from '../../app/enums/LoadingStatus.enum.js';
 
@@ -25,26 +24,15 @@ export const fetchHistory = createAsyncThunk(
       orderBy('createdAt', 'desc'),
     );
     const snapshot = await getDocs(q);
-    const records = [];
-    for (const doc of snapshot.docs) {
-      const feelings = [];
-      for (const feeling of doc.data().feelings) {
-        feelings.push((await getDoc(feeling)).data());
-      }
-      const causes = [];
-      for (const cause of doc.data().causes) {
-        causes.push((await getDoc(cause)).data());
-      }
-      const record = {
+    return snapshot.docs.map((doc) => {
+      const data = doc.data();
+      return {
         ...doc.data(),
-        feelings,
-        causes,
+        feelings: data.feelings.map((feeling) => thunkAPI.getState().feelings.entities[feeling.id]),
+        causes: data.causes.map((cause) => thunkAPI.getState().causes.entities[cause.id]),
         id: doc.id,
       };
-
-      records.push(record);
-    }
-    return records;
+    });
   },
 );
 

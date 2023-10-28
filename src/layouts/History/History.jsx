@@ -1,14 +1,15 @@
-import { Box, Chip } from '@mui/joy';
+import { Box, Chip, useTheme } from '@mui/joy';
+import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useState, useMemo } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { deleteHistory, fetchHistory } from './historySlice.js';
-import HistoryRecord from './HistoryRecord.jsx';
+import { useDispatch, useSelector } from 'react-redux';
 import LogPopup from '../LogPopup/LogPopup.jsx';
+import HistoryRecord from './HistoryRecord.jsx';
+import { deleteHistory, fetchHistory } from './historySlice.js';
 
 function History() {
   const { t } = useTranslation();
   const dispatch = useDispatch();
+  const theme = useTheme();
 
   const records = useSelector((state) => state.history.history);
 
@@ -86,13 +87,19 @@ function History() {
         <Box component="section">
           Most used feelings:
           {top5Feelings.map((feeling) => (
-            <Chip key={feeling}>{feeling}</Chip>
+            <Chip
+              sx={{ bgcolor: theme.features.feelings }}
+              key={feeling}
+            >{feeling}</Chip>
           ))}
         </Box>
         <Box component="section">
           Most used causes:
           {top5Causes.map((cause) => (
-            <Chip key={cause}>{cause}</Chip>
+            <Chip
+              sx={{ bgcolor: theme.features.causes }}
+              key={cause}
+            >{cause}</Chip>
           ))}
         </Box>
       </Box>

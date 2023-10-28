@@ -6,8 +6,9 @@ import {
 } from '@mui/joy';
 import { useTranslation } from 'react-i18next';
 import { useSelector, useDispatch } from 'react-redux';
+import { useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { selectAllCauses } from './causesSlice.js';
+import { fetchCauses, selectAllCauses } from './causesSlice.js';
 
 function CausesAutocomplete({
                                 value,
@@ -17,6 +18,10 @@ function CausesAutocomplete({
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const causesList = useSelector(selectAllCauses);
+
+  useEffect(() => {
+    dispatch(fetchCauses());
+  }, []);
 
   return (
     <FormControl error={error}>

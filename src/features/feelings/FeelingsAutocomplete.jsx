@@ -6,8 +6,9 @@ import {
 } from '@mui/joy';
 import { useTranslation } from 'react-i18next';
 import { useSelector, useDispatch } from 'react-redux';
+import { useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { selectAllFeelings } from './feelingsSlice.js';
+import { fetchFeelings, selectAllFeelings } from './feelingsSlice.js';
 
 function FeelingsAutocomplete({
                                 value,
@@ -17,6 +18,10 @@ function FeelingsAutocomplete({
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const feelingsList = useSelector(selectAllFeelings);
+
+  useEffect(() => {
+    dispatch(fetchFeelings());
+  }, []);
 
   return (
     <FormControl error={error}>

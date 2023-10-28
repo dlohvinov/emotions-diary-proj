@@ -2,7 +2,7 @@ import { Box, Chip } from '@mui/joy';
 import { useTranslation } from 'react-i18next';
 import { useState, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { deleteHistory } from './historySlice.js';
+import { deleteHistory, fetchHistory } from './historySlice.js';
 import HistoryRecord from './HistoryRecord.jsx';
 import LogPopup from '../LogPopup/LogPopup.jsx';
 
@@ -60,6 +60,7 @@ function History() {
 
   async function deleteRecord(record) {
     await dispatch(deleteHistory(record)).unwrap();
+    return dispatch(fetchHistory()).unwrap();
   }
 
   return (

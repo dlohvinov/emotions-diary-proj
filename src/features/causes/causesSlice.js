@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice, createEntityAdapter } from '@reduxjs/toolkit';
 import { getApp } from 'firebase/app';
 import { collection, getDocs, getFirestore, query } from 'firebase/firestore';
 import LoadingStatus from '../../app/enums/LoadingStatus.enum.js';
@@ -19,16 +19,20 @@ export const fetchCauses = createAsyncThunk(
   },
 );
 
+const causesAdapter = createEntityAdapter({
+  selectId: (cause) => cause.id,
+  sortComparer: (a, b) => a.name.localeCompare(b.name),
+});
+
 export const causesSlice = createSlice({
   name: 'causes',
-  initialState: {
+  initialState: causesAdapter.getInitialState({
     loading: LoadingStatus.IDLE,
-    causes: [],
-  },
+  }),
   reducers: {},
   extraReducers: (builder) => {
     builder.addCase(fetchCauses.fulfilled, (state, action) => {
-      state.causes = action.payload;
+      causesAdapter.addMany(state, action.payload);
       state.loading = LoadingStatus.IDLE;
     });
     builder.addCase(fetchCauses.rejected, (state, action) => {
@@ -40,5 +44,14 @@ export const causesSlice = createSlice({
     });
   },
 });
+
+const getCausesSelectors = causesAdapter.getSelectors(
+  (state) => state.causes,
+);
+
+export const {
+  selectAll: selectAllCauses,
+  selectById: selectCauseById,
+} = getCausesSelectors;
 
 export default causesSlice.reducer;

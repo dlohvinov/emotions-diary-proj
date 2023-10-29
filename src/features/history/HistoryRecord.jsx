@@ -11,20 +11,23 @@ import {
 import PropTypes from 'prop-types';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
 import { Edit, Delete } from '@mui/icons-material';
+import { selectHistoryById } from './historySlice.js';
 
 function HistoryRecord({
-                         record,
+                         id,
                          onEdit,
                          onDelete,
                        }) {
 
   const { t } = useTranslation();
   const theme = useTheme();
+  const record = useSelector((state) => selectHistoryById(state, id));
 
   const [showFull, setShowFull] = useState(false);
 
-  console.info('HistoryRecord render', record.id);
+  console.info('HistoryRecord render', record.id, record.description);
 
   const maxSize = 180;
   const isDescriptionOverflow = record.description.length > maxSize;
@@ -33,7 +36,7 @@ function HistoryRecord({
     return (!isDescriptionOverflow || showFull)
       ? record.description
       : `${record.description.slice(0, maxSize)}...`;
-  }, [showFull]);
+  }, [showFull, record.description]);
 
   return (
     <Card
@@ -114,12 +117,7 @@ function HistoryRecord({
 }
 
 HistoryRecord.propTypes = {
-  record: PropTypes.shape({
-    feelings: PropTypes.arrayOf(PropTypes.shape({ name: PropTypes.string })).isRequired,
-    causes: PropTypes.arrayOf(PropTypes.shape({ name: PropTypes.string })).isRequired,
-    description: PropTypes.string,
-    createdAt: PropTypes.number.isRequired,
-  }).isRequired,
+  id: PropTypes.string.isRequired,
   onEdit: PropTypes.func.isRequired,
   onDelete: PropTypes.func.isRequired,
 };

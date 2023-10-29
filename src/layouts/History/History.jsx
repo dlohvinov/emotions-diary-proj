@@ -6,7 +6,7 @@ import LogPopup from '../LogPopup/LogPopup.jsx';
 import HistoryRecord from '../../features/history/HistoryRecord.jsx';
 import {
   deleteHistory,
-  fetchHistory, selectHistory,
+  fetchHistory, selectHistoryIds,
 } from '../../features/history/historySlice.js';
 import FeelingsFilter from '../../features/filters/FeelingsFilter.jsx';
 
@@ -14,12 +14,12 @@ function History() {
   const { t } = useTranslation();
   const dispatch = useDispatch();
 
-  const records = useSelector(selectHistory);
+  const recordIds = useSelector(selectHistoryIds);
 
   const [editedId, setEditedId] = useState(null);
 
-  async function deleteRecord(record) {
-    await dispatch(deleteHistory(record)).unwrap();
+  async function deleteRecord(id) {
+    await dispatch(deleteHistory({ id })).unwrap();
     return dispatch(fetchHistory()).unwrap();
   }
 
@@ -50,12 +50,12 @@ function History() {
         gap: 2,
       }}
       >
-        {records.map((record) => (
+        {recordIds.map((id) => (
           <HistoryRecord
-            key={record.id}
-            record={record}
-            onEdit={() => setEditedId(record.id)}
-            onDelete={deleteRecord}
+            key={id}
+            id={id}
+            onEdit={() => setEditedId(id)}
+            onDelete={() => deleteRecord(id)}
           ></HistoryRecord>
         ))}
       </Box>

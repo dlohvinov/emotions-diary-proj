@@ -89,7 +89,6 @@ export const updateHistory = createAsyncThunk(
       feelings: _draft.feelings.map((feeling) => doc(db, 'feelings', feeling.id)),
       causes: _draft.causes.map((cause) => doc(db, 'causes', cause.id)),
     });
-    await new Promise((resolve) => setTimeout(resolve, 1000));
     // updateDoc doesn't return ref to updated document :(
     const result = await getDoc(doc(db, 'logs', id));
     const data = result.data();

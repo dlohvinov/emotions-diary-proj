@@ -24,6 +24,8 @@ function HistoryRecord({
 
   const [showFull, setShowFull] = useState(false);
 
+  console.info('HistoryRecord render', record.id);
+
   const maxSize = 180;
   const isDescriptionOverflow = record.description.length > maxSize;
 

@@ -2,11 +2,12 @@ import { Card, Title, DonutChart, Legend } from '@tremor/react';
 import { useSelector } from 'react-redux';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { selectHistory } from '../../features/history/historySlice.js';
 
 function FeelingsDonutChart() {
   const { t } = useTranslation();
 
-  const rawData = useSelector((state) => state.history.history);
+  const rawData = useSelector(selectHistory);
 
   const aggFeelingsCount = useMemo(() => {
     const map = rawData.reduce((acc, cur) => {

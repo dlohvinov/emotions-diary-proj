@@ -1,16 +1,9 @@
 import { useTranslation } from 'react-i18next';
 import { useState, Fragment, useEffect } from 'react';
 import { useImmer } from 'use-immer';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import set from 'lodash/set';
-import {
-  getFirestore,
-  collection,
-  addDoc,
-  setDoc,
-  doc,
-} from 'firebase/firestore';
 import {
   Button,
   Textarea,
@@ -19,8 +12,11 @@ import {
   ModalDialog,
   Typography, Box,
 } from '@mui/joy';
-import { getApp } from 'firebase/app';
-import { selectUserinfo } from '../../features/auth/authSlice.js';
+import {
+  addHistory,
+  selectHistoryById,
+  updateHistory,
+} from '../../features/history/historySlice.js';
 import FeelingsAutocomplete
   from '../../features/feelings/FeelingsAutocomplete.jsx';
 import CausesAutocomplete from '../../features/causes/CausesAutocomplete.jsx';
@@ -33,24 +29,25 @@ const getDraftSchema = () => ({
 
 function LogPopup({
                     activator,
-                    record,
+                    editedId,
                     onSave,
                     onClose,
-                    mode,
                   }) {
   const { t } = useTranslation();
+  const dispatch = useDispatch();
 
-  const userinfo = useSelector(selectUserinfo);
-
-  const db = getFirestore(getApp());
+  const editedRecord = useSelector((state) => selectHistoryById(state, editedId));
 
   const [open, setOpen] = useState(false);
 
   const [draft, setDraft] = useImmer(getDraftSchema());
 
   useEffect(() => {
-    if (record) setDraft(record);
-    else setDraft(getDraftSchema());
+    if (editedId) {
+      setDraft(editedRecord);
+    } else {
+      setDraft(getDraftSchema());
+    }
   }, [open, activator]);
 
   function setToDraft({ path, value }) {
@@ -58,27 +55,14 @@ function LogPopup({
   }
 
   async function submit() {
-    const feelingsRefs = draft.feelings.map((feeling) => doc(db, 'feelings', feeling.id));
-    const causesRefs = draft.causes.map((cause) => doc(db, 'causes', cause.id));
-
-    const newRecord = {
-      // if exists, will be overwritten by ..draft
-      createdAt: Date.now(),
-      // if exists, will be overwritten by ..draft
-      uid: userinfo.uid,
-      ...draft,
-      feelings: feelingsRefs,
-      causes: causesRefs,
-    };
-
-    if (record) {
-      delete newRecord.id;
-      await setDoc(doc(db, 'logs', record.id), newRecord);
+    if (editedId) {
+      await dispatch(updateHistory({ id: editedId, draft })).unwrap();
     } else {
-      await addDoc(collection(db, 'logs'), newRecord);
+      await dispatch(addHistory({ draft })).unwrap();
     }
+    await onSave && onSave();
     setOpen(false);
-    return onSave && onSave();
+    await onClose && onClose();
   }
 
   return (

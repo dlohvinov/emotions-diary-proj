@@ -3,11 +3,12 @@ import { Autocomplete } from '@mui/joy';
 import { useSelector } from 'react-redux';
 import { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { selectHistory } from '../../features/history/historySlice.js';
 
 function CausesByFeelingsBar() {
   const { t } = useTranslation();
 
-  const rawData = useSelector((state) => state.history.history);
+  const rawData = useSelector(selectHistory);
 
   const aggCausesByFeelings = useMemo(() => {
     const map = rawData.reduce((acc, cur) => {

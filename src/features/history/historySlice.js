@@ -2,6 +2,7 @@ import {
   createAsyncThunk,
   createSelector,
   createSlice,
+  createEntityAdapter,
 } from '@reduxjs/toolkit';
 import { getApp } from 'firebase/app';
 import {
@@ -9,6 +10,9 @@ import {
   deleteDoc,
   doc,
   getDocs,
+  getDoc,
+  addDoc,
+  updateDoc,
   getFirestore,
   orderBy,
   query,
@@ -48,21 +52,77 @@ export const fetchHistory = createAsyncThunk(
   },
 );
 
+export const addHistory = createAsyncThunk(
+  'history/addHistory',
+  async ({ draft }, thunkAPI) => {
+    const app = getApp();
+    const db = getFirestore(app);
+    const { uid } = thunkAPI.getState().auth.user;
+    const createdAt = new Date().getTime();
+    const resultRef = await addDoc(collection(db, 'logs'), {
+      ...draft,
+      feelings: draft.feelings.map((feeling) => doc(db, 'feelings', feeling.id)),
+      causes: draft.causes.map((cause) => doc(db, 'causes', cause.id)),
+      uid,
+      createdAt,
+    });
+    const result = await getDoc(resultRef);
+    const data = result.data();
+    return {
+      ...data,
+      feelings: data.feelings.map((feeling) => thunkAPI.getState().feelings.entities[feeling.id]),
+      causes: data.causes.map((cause) => thunkAPI.getState().causes.entities[cause.id]),
+      id: result.id,
+    };
+  },
+);
+
+export const updateHistory = createAsyncThunk(
+  'history/updateHistory',
+  async ({ id, draft }, thunkAPI) => {
+    const app = getApp();
+    const db = getFirestore(app);
+    const _draft = { ...draft };
+    if (_draft.id) delete _draft.id;
+    await updateDoc(doc(db, 'logs', id), {
+      ..._draft,
+      feelings: _draft.feelings.map((feeling) => doc(db, 'feelings', feeling.id)),
+      causes: _draft.causes.map((cause) => doc(db, 'causes', cause.id)),
+    });
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    // updateDoc doesn't return ref to updated document :(
+    const result = await getDoc(doc(db, 'logs', id));
+    const data = result.data();
+    return {
+      ...data,
+      feelings: data.feelings.map((feeling) => thunkAPI.getState().feelings.entities[feeling.id]),
+      causes: data.causes.map((cause) => thunkAPI.getState().causes.entities[cause.id]),
+      id: result.id,
+    };
+  },
+);
+
 export const deleteHistory = createAsyncThunk(
   'history/deleteHistory',
-  async ({ id }) => {
+  async ({ id }, thunkAPI) => {
     const app = getApp();
     const db = getFirestore(app);
     await deleteDoc(doc(db, 'logs', id));
+    await thunkAPI.dispatch(fetchHistory()).unwrap();
     return id;
   },
 );
 
+const historyAdapter = createEntityAdapter({
+  selectId: (history) => history.id,
+  sortComparer: (a, b) => b.createdAt - a.createdAt,
+});
+
 export const historySlice = createSlice({
   name: 'history',
   initialState: {
+    ...historyAdapter.getInitialState(),
     loading: LoadingStatus.IDLE,
-    history: [],
     filters: {
       feelings: [],
       date: {
@@ -84,7 +144,7 @@ export const historySlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(fetchHistory.fulfilled, (state, action) => {
-      state.history = action.payload;
+      historyAdapter.setAll(state, action.payload)
       state.loading = LoadingStatus.IDLE;
     });
     builder.addCase(fetchHistory.rejected, (state, action) => {
@@ -94,6 +154,12 @@ export const historySlice = createSlice({
     builder.addCase(fetchHistory.pending, (state) => {
       state.loading = LoadingStatus.PENDING;
     });
+    builder.addCase(addHistory.fulfilled, (state, action) => {
+      historyAdapter.addOne(state, action.payload);
+    });
+    builder.addCase(updateHistory.fulfilled, (state, action) => {
+      historyAdapter.upsertOne(state, action.payload);
+    });
   },
 });
 
@@ -101,6 +167,12 @@ export const {
   onDateFilterChange,
   onFeelingsFilterChange,
 } = historySlice.actions;
+
+export const {
+  selectAll: selectHistory,
+  selectById: selectHistoryById,
+  selectIds: selectHistoryIds,
+} = historyAdapter.getSelectors((state) => state.history);
 
 export const updateFilter = ({ filter, value }) => (dispatch) => {
   switch (filter) {
@@ -117,7 +189,7 @@ export const updateFilter = ({ filter, value }) => (dispatch) => {
 };
 
 export const selectCountedFeelings = createSelector([
-  (state) => state.history.history,
+  selectHistory,
   (state, limit) => limit,
 ], (history, limit) => {
   const map = history.reduce((map, log) => {

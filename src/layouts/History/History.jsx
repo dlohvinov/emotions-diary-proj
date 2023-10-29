@@ -1,19 +1,22 @@
-import { Box, Chip, useTheme } from '@mui/joy';
-import { useMemo, useState } from 'react';
+import { Box } from '@mui/joy';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import LogPopup from '../LogPopup/LogPopup.jsx';
 import HistoryRecord from '../../features/history/HistoryRecord.jsx';
-import { deleteHistory, fetchHistory } from '../../features/history/historySlice.js';
+import {
+  deleteHistory,
+  fetchHistory, selectHistory,
+} from '../../features/history/historySlice.js';
 import FeelingsFilter from '../../features/filters/FeelingsFilter.jsx';
 
 function History() {
   const { t } = useTranslation();
   const dispatch = useDispatch();
 
-  const records = useSelector((state) => state.history.history);
+  const records = useSelector(selectHistory);
 
-  const [reviewedRecord, setReviewedRecord] = useState(null);
+  const [editedId, setEditedId] = useState(null);
 
   async function deleteRecord(record) {
     await dispatch(deleteHistory(record)).unwrap();
@@ -33,9 +36,9 @@ function History() {
       }}
     >
       <LogPopup
-        activator={!!reviewedRecord}
-        record={reviewedRecord}
-        onClose={() => setReviewedRecord(null)}
+        activator={!!editedId}
+        editedId={editedId}
+        onClose={() => setEditedId(null)}
       ></LogPopup>
       <Box component="header">
         <FeelingsFilter />
@@ -51,7 +54,7 @@ function History() {
           <HistoryRecord
             key={record.id}
             record={record}
-            onEdit={() => setReviewedRecord(record)}
+            onEdit={() => setEditedId(record.id)}
             onDelete={deleteRecord}
           ></HistoryRecord>
         ))}

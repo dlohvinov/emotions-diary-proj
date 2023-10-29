@@ -3,8 +3,9 @@ import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import LogPopup from '../LogPopup/LogPopup.jsx';
-import HistoryRecord from './HistoryRecord.jsx';
-import { deleteHistory, fetchHistory } from './historySlice.js';
+import HistoryRecord from '../../features/history/HistoryRecord.jsx';
+import { deleteHistory, fetchHistory } from '../../features/history/historySlice.js';
+import FeelingsFilter from '../../features/filters/FeelingsFilter.jsx';
 
 function History() {
   const { t } = useTranslation();
@@ -82,8 +83,7 @@ function History() {
         onClose={() => setReviewedRecord(null)}
       ></LogPopup>
       <Box component="header">
-        Searchbar goes here
-        Then go most common emotions | causes
+        <FeelingsFilter />
         <Box component="section">
           Most used feelings:
           {top5Feelings.map((feeling) => (

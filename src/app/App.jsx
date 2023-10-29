@@ -5,7 +5,7 @@ import { useDispatch } from 'react-redux';
 import { initializeAuth } from '../features/auth/authSlice.js';
 import { fetchCauses } from '../features/causes/causesSlice.js';
 import { fetchFeelings } from '../features/feelings/feelingsSlice.js';
-import { fetchHistory } from '../layouts/History/historySlice.js';
+import { fetchHistory } from '../features/history/historySlice.js';
 // import Auth from '../pages/AuthPage/Auth.jsx';
 import MainPage from '../pages/MainPage/MainPage.jsx';
 

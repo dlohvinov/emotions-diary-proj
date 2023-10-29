@@ -4,11 +4,11 @@ import {
   useTheme,
   Button,
 } from '@mui/joy';
-import { DateRangePicker } from '@tremor/react';
 import { useTranslation } from 'react-i18next';
 import LogPopup from '../LogPopup/LogPopup.jsx';
 import UserProfile from '../../features/user/UserProfile.jsx';
 import DarkModeSwitch from './DarkModeSwitch.jsx';
+import DateFilter from '../../features/filters/DateFilter.jsx';
 
 function AppBar() {
   const { t } = useTranslation();
@@ -30,7 +30,7 @@ function AppBar() {
           <DarkModeSwitch />
         </Grid>
         <Grid xs={6} className="flex justify-center">
-          <DateRangePicker></DateRangePicker>
+          <DateFilter />
         </Grid>
         <Grid xs={3} gap={1} className="flex align-center justify-end">
           <LogPopup

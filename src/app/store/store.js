@@ -1,6 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
 import authReducer from '../../features/auth/authSlice.js';
-import historyReducer from '../../layouts/History/historySlice.js';
+import historyReducer from '../../features/history/historySlice.js';
 import feelingsSlice from '../../features/feelings/feelingsSlice.js';
 import causesSlice from '../../features/causes/causesSlice.js';
 

@@ -10,55 +10,10 @@ import FeelingsFilter from '../../features/filters/FeelingsFilter.jsx';
 function History() {
   const { t } = useTranslation();
   const dispatch = useDispatch();
-  const theme = useTheme();
 
   const records = useSelector((state) => state.history.history);
 
   const [reviewedRecord, setReviewedRecord] = useState(null);
-
-  const countFeelings = useMemo(() => {
-    return records.reduce((acc, cur) => {
-      cur.feelings.forEach((feeling) => {
-        if (acc[feeling.name]) {
-          acc[feeling.name] += 1;
-        } else {
-          acc[feeling.name] = 1;
-        }
-      });
-      return acc;
-    }, {});
-  }, [records]);
-
-  const countCauses = useMemo(() => {
-    return records.reduce((acc, cur) => {
-      cur.causes.forEach((cause) => {
-        if (acc[cause.name]) {
-          acc[cause.name] += 1;
-        } else {
-          acc[cause.name] = 1;
-        }
-      });
-      return acc;
-    }, {});
-  }, [records]);
-
-  const existingCauses = useMemo(() => {
-    return Object.keys(countCauses);
-  }, [countCauses]);
-
-  const top5Feelings = useMemo(() => {
-    return Object.entries(countFeelings)
-    .sort((a, b) => b[1] - a[1])
-    .slice(0, 5)
-    .map(([name, count]) => (name));
-  }, [countFeelings]);
-
-  const top5Causes = useMemo(() => {
-    return Object.entries(countCauses)
-    .sort((a, b) => b[1] - a[1])
-    .slice(0, 5)
-    .map(([name, count]) => (name));
-  }, [countCauses]);
 
   async function deleteRecord(record) {
     await dispatch(deleteHistory(record)).unwrap();
@@ -84,24 +39,6 @@ function History() {
       ></LogPopup>
       <Box component="header">
         <FeelingsFilter />
-        <Box component="section">
-          Most used feelings:
-          {top5Feelings.map((feeling) => (
-            <Chip
-              sx={{ bgcolor: theme.features.feelings }}
-              key={feeling}
-            >{feeling}</Chip>
-          ))}
-        </Box>
-        <Box component="section">
-          Most used causes:
-          {top5Causes.map((cause) => (
-            <Chip
-              sx={{ bgcolor: theme.features.causes }}
-              key={cause}
-            >{cause}</Chip>
-          ))}
-        </Box>
       </Box>
       <Box
         component="section" sx={{

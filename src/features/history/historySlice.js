@@ -1,4 +1,8 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import {
+  createAsyncThunk,
+  createSelector,
+  createSlice,
+} from '@reduxjs/toolkit';
 import { getApp } from 'firebase/app';
 import {
   collection,
@@ -15,10 +19,10 @@ import LoadingStatus from '../../app/enums/LoadingStatus.enum.js';
 export const fetchHistory = createAsyncThunk(
   'history/fetchHistory',
   async (arg, thunkAPI) => {
-    const { uid } = thunkAPI.getState().auth.user;
     const app = getApp();
     const db = getFirestore(app);
 
+    const { uid } = thunkAPI.getState().auth.user;
     const filters = thunkAPI.getState().history.filters;
 
     let q = query(
@@ -93,7 +97,10 @@ export const historySlice = createSlice({
   },
 });
 
-export const { onDateFilterChange, onFeelingsFilterChange } = historySlice.actions;
+export const {
+  onDateFilterChange,
+  onFeelingsFilterChange,
+} = historySlice.actions;
 
 export const updateFilter = ({ filter, value }) => (dispatch) => {
   switch (filter) {
@@ -107,6 +114,24 @@ export const updateFilter = ({ filter, value }) => (dispatch) => {
       throw new Error(`Unknown filter ${filter}`);
   }
   return dispatch(fetchHistory());
-}
+};
+
+export const selectCountedFeelings = createSelector([
+  (state) => state.history.history,
+  (state, limit) => limit,
+], (history, limit) => {
+  const map = history.reduce((map, log) => {
+    log.feelings.forEach((feeling) => {
+      if (map.get(feeling)) {
+        map.set(feeling, map.get(feeling) + 1);
+      } else {
+        map.set(feeling, 1);
+      }
+    });
+    return map;
+  }, new Map());
+  const sortedMap = new Map([...map.entries()].sort((a, b) => b[1] - a[1]));
+  return new Map([...sortedMap.entries()].slice(0, limit));
+});
 
 export default historySlice.reducer;

@@ -34,7 +34,7 @@ function AppBar() {
         </Grid>
         <Grid xs={3} gap={1} className="flex align-center justify-end">
           <LogPopup
-            activator={<Button>Add entry</Button>}
+            activator={<Button>{ t('logs.makeLog') }</Button>}
           ></LogPopup>
           <UserProfile />
         </Grid>

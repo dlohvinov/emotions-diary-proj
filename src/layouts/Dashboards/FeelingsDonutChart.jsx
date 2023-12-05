@@ -30,7 +30,7 @@ function FeelingsDonutChart() {
 
   return (
     <Card className="w-full">
-      <Title>{t('Feelings count')}</Title>
+      <Title>{t('dashboards.feelingsCount')}</Title>
       <DonutChart
         className="mt-6"
         data={aggFeelingsCount}

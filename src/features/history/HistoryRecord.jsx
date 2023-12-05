@@ -80,7 +80,7 @@ function HistoryRecord({
           width="100%"
           onClick={() => setShowFull(!showFull)}
         >
-          {showFull ? t('les') : t('morr')}
+          {showFull ? t('reusable.less') : t('reusable.more')}
         </Button>
       }
       <Box

@@ -58,7 +58,7 @@ function CausesByFeelingsBar() {
 
   return (
     <Card>
-      <Title>Causes by Feelings bar</Title>
+      <Title>{ t('dashboards.causesByFeelings') }</Title>
       <Autocomplete
         value={selectedFeelings}
         options={existingFeelings}

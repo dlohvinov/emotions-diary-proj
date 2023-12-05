@@ -22,7 +22,7 @@ function Dashboards() {
       }}
     >
       <Typography level="h2">
-        {t('DASHBOARDS')}
+        {t('dashboards.dashboards')}
       </Typography>
       <FeelingsDonutChart />
       <CausesByFeelingsBar />

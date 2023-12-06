@@ -30,7 +30,7 @@ function FeelingsAutocomplete({
         value={value}
         options={feelingsList}
         placeholder={t('feelings.feeling')}
-        getOptionLabel={(option) => option.name}
+        getOptionLabel={(option) => option.label}
         disableCloseOnSelect
         multiple
         onChange={onChange}

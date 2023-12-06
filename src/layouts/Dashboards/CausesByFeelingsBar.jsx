@@ -13,28 +13,28 @@ function CausesByFeelingsBar() {
   const aggCausesByFeelings = useMemo(() => {
     const map = rawData.reduce((acc, cur) => {
       cur.feelings.forEach((feeling) => {
-        if (acc[feeling.name]) {
+        if (acc[feeling.label]) {
           cur.causes.forEach((cause) => {
-            const causeCount = acc[feeling.name][cause.name];
-            acc[feeling.name][cause.name] = causeCount ? causeCount + 1 : 1;
+            const causeCount = acc[feeling.label][cause.label];
+            acc[feeling.label][cause.label] = causeCount ? causeCount + 1 : 1;
           });
         } else {
-          acc[feeling.name] = {};
+          acc[feeling.label] = {};
           cur.causes.forEach((cause) => {
-            acc[feeling.name][cause.name] = 1;
+            acc[feeling.label][cause.label] = 1;
           });
         }
       });
       return acc;
     }, {});
-    return Object.entries(map).map(([name, causes]) => ({ name, ...causes }));
+    return Object.entries(map).map(([label, causes]) => ({ label, ...causes }));
   }, [rawData]);
 
   const existingCauses = useMemo(() => {
     const set = new Set();
     rawData.forEach((record) => {
       record.causes.forEach((cause) => {
-        set.add(cause.name);
+        set.add(cause.label);
       });
     });
     return Array.from(set);
@@ -44,7 +44,7 @@ function CausesByFeelingsBar() {
     const set = new Set();
     rawData.forEach((record) => {
       record.feelings.forEach((feeling) => {
-        set.add(feeling.name);
+        set.add(feeling.label);
       });
     });
     return Array.from(set);
@@ -53,7 +53,7 @@ function CausesByFeelingsBar() {
   const [selectedFeelings, setSelectedFeelings] = useState([]);
 
   const filteredAggCausesByFeelings = useMemo(() => {
-    return aggCausesByFeelings.filter(({ name }) => selectedFeelings.includes(name));
+    return aggCausesByFeelings.filter(({ label }) => selectedFeelings.includes(label));
   }, [aggCausesByFeelings, selectedFeelings]);
 
   return (
@@ -70,7 +70,7 @@ function CausesByFeelingsBar() {
       <BarChart
         className="mt-6"
         data={filteredAggCausesByFeelings}
-        index="name"
+        index="label"
         categories={existingCauses}
         yAxisWidth={48}
       />

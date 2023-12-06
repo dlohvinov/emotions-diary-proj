@@ -52,7 +52,7 @@ function HistoryRecord({
             key={feeling.name}
             variant="solid"
             sx={{ bgcolor: theme.features.feelings }}
-          >{feeling.name}</Chip>
+          >{feeling.label}</Chip>
         ))}
       </Box>
       <Box
@@ -64,7 +64,7 @@ function HistoryRecord({
             key={cause.name}
             variant="solid"
             sx={{ bgcolor: theme.features.causes }}
-          >{cause.name}</Chip>
+          >{cause.label}</Chip>
         ))}
       </Box>
       <Typography

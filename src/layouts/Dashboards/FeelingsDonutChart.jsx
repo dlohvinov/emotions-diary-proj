@@ -12,19 +12,19 @@ function FeelingsDonutChart() {
   const aggFeelingsCount = useMemo(() => {
     const map = rawData.reduce((acc, cur) => {
       cur.feelings.forEach((feeling) => {
-        if (acc[feeling.name]) {
-          acc[feeling.name] += 1;
+        if (acc[feeling.label]) {
+          acc[feeling.label] += 1;
         } else {
-          acc[feeling.name] = 1;
+          acc[feeling.label] = 1;
         }
       });
       return acc;
     }, {});
-    return Object.entries(map).map(([name, count]) => ({ name, count }));
+    return Object.entries(map).map(([label, count]) => ({ label, count }));
   }, [rawData]);
 
   const legend = useMemo(() => {
-    return aggFeelingsCount.map(({ name }) => name);
+    return aggFeelingsCount.map(({ label }) => label);
   }, [aggFeelingsCount]);
 
 
@@ -35,7 +35,7 @@ function FeelingsDonutChart() {
         className="mt-6"
         data={aggFeelingsCount}
         category="count"
-        index="name"
+        index="label"
       />
       <Legend
         className="mt-6"

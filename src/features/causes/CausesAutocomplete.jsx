@@ -30,7 +30,7 @@ function CausesAutocomplete({
         value={value}
         options={causesList}
         placeholder={t('causes.cause')}
-        getOptionLabel={(option) => option.name}
+        getOptionLabel={(option) => option.label}
         disableCloseOnSelect
         multiple
         onChange={onChange}

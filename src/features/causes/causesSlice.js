@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice, createEntityAdapter } from '@reduxjs/toolkit';
 import { getApp } from 'firebase/app';
 import { collection, getDocs, getFirestore, query } from 'firebase/firestore';
+import i18n from 'i18next';
 import LoadingStatus from '../../app/enums/LoadingStatus.enum.js';
 
 export const fetchCauses = createAsyncThunk(
@@ -13,6 +14,7 @@ export const fetchCauses = createAsyncThunk(
     const causes = [];
     snapshot.forEach((doc) => causes.push({
       ...doc.data(),
+      label: i18n.t(`causes.list.${doc.data().name}`),
       id: doc.id,
     }));
     return causes;

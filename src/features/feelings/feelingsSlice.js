@@ -4,6 +4,7 @@ import {
   createSlice,
 } from '@reduxjs/toolkit';
 import { getApp } from 'firebase/app';
+import i18n from 'i18next';
 import { collection, getDocs, getFirestore, query } from 'firebase/firestore';
 import LoadingStatus from '../../app/enums/LoadingStatus.enum.js';
 
@@ -17,6 +18,7 @@ export const fetchFeelings = createAsyncThunk(
     const feelings = [];
     snapshot.forEach((doc) => feelings.push({
       ...doc.data(),
+      label: i18n.t(`feelings.list.${doc.data().name}`),
       id: doc.id,
     }));
     return feelings;

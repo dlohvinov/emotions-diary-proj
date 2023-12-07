@@ -125,7 +125,8 @@ export const historySlice = createSlice({
     filters: {
       feelings: [],
       date: {
-        from: new Date(new Date().setDate(1)).getTime(),
+        from: new Date(1, 1, 2023).getTime(),
+        // from: new Date(new Date().setDate(1)).getTime(),
         to: new Date().getTime(),
       },
     },

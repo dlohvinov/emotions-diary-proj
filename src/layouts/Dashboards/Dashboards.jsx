@@ -2,6 +2,7 @@ import { Box, Typography } from '@mui/joy';
 import { useTranslation } from 'react-i18next';
 import FeelingsDonutChart from './FeelingsDonutChart.jsx';
 import CausesByFeelingsBar from './CausesByFeelingsBar.jsx';
+import EmotionByDateChart from './EmotionByDateChart.jsx';
 
 function Dashboards() {
   const { t } = useTranslation();
@@ -26,6 +27,7 @@ function Dashboards() {
       </Typography>
       <FeelingsDonutChart />
       <CausesByFeelingsBar />
+      <EmotionByDateChart />
     </Box>
 
   );

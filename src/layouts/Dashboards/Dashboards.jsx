@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import FeelingsDonutChart from './FeelingsDonutChart.jsx';
 import CausesByFeelingsBar from './CausesByFeelingsBar.jsx';
 import EmotionByDateChart from './EmotionByDateChart.jsx';
+import CauseByDateChart from './CauseByDateChart.jsx';
 
 function Dashboards() {
   const { t } = useTranslation();
@@ -28,6 +29,7 @@ function Dashboards() {
       <FeelingsDonutChart />
       <CausesByFeelingsBar />
       <EmotionByDateChart />
+      <CauseByDateChart />
     </Box>
 
   );

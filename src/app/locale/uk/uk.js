@@ -79,6 +79,14 @@ export default {
     dashboards: 'Графіки',
     feelingsCount: 'Кількість почуттів',
     causesByFeelings: 'Причини за почуттями',
+    emotionByDate: 'Почуття за датою',
+    causeByDate: 'Причини за датою',
+
+    interval: {
+      intervals: 'Інтервали',
+      week: 'Тиждень',
+      month: 'Місяць',
+    },
   },
   validation: {
     required: 'Обов\'язково',

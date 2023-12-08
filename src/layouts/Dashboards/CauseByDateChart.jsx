@@ -5,29 +5,29 @@ import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { selectHistory } from '../../features/history/historySlice.js';
 
-export default function CauseByDateChart() {
+export default function EmotionByDateChart() {
   const { t } = useTranslation();
 
   const rawData = useSelector(selectHistory);
   const { from, to } = useSelector((state) => state.history.filters.date);
 
-  const feelingsWithDate = useMemo(() => {
+  const causesWithDate = useMemo(() => {
     return rawData.map((record) => {
-      return ({ feelings: record.feelings, date: record.createdAt });
+      return ({ causes: record.causes, date: record.createdAt });
     });
   }, [rawData]);
 
-  const existingFeelings = useMemo(() => {
+  const existingCauses = useMemo(() => {
     const set = new Set();
     rawData.forEach((record) => {
-      record.feelings.forEach((feeling) => {
-        set.add(feeling.label);
+      record.causes.forEach((cause) => {
+        set.add(cause.label);
       });
     });
     return Array.from(set);
   }, [rawData]);
 
-  const [selectedFeelings, setSelectedFeelings] = useState([]);
+  const [selectedCauses, setSelectedCauses] = useState([]);
 
   const dateIntervalOptions = [
     { value: 'week', label: t('dashboards.interval.week') },
@@ -57,28 +57,28 @@ export default function CauseByDateChart() {
     const prevInterval = intervals[index - 1];
     if (!prevInterval) return collected;
 
-    const countedFeelings = selectedFeelings.reduce((count, feeling) => {
-      const feelingByInterval = feelingsWithDate
+    const countedCauses = selectedCauses.reduce((count, cause) => {
+      const causeByInterval = causesWithDate
       .filter((entry) => (
-        entry.feelings.some(({ label }) => label === feeling) && entry.date >=
+        entry.causes.some(({ label }) => label === cause) && entry.date >=
         prevInterval && entry.date < currentInterval),
       );
-      count[feeling] = feelingByInterval.length;
+      count[cause] = causeByInterval.length;
       return count;
     }, {});
 
     return [
       ...collected, {
         date: new Date(currentInterval).toLocaleDateString(),
-        ...countedFeelings,
+        ...countedCauses,
       },
     ];
-  }, []), [chartInterval, from, to, selectedFeelings]);
+  }, []), [chartInterval, from, to, selectedCauses]);
 
 
   return (
     <Card>
-      <Title>{t('dashboards.emotionByDate')}</Title>
+      <Title>{t('dashboards.causeByDate')}</Title>
       <Autocomplete
         className="mt-4"
         value={chartInterval}
@@ -89,19 +89,19 @@ export default function CauseByDateChart() {
 
       <Autocomplete
         className="mt-4"
-        value={selectedFeelings}
-        options={existingFeelings}
-        placeholder={t('feelings.feeling')}
+        value={selectedCauses}
+        options={existingCauses}
+        placeholder={t('causes.cause')}
         disableCloseOnSelect
         multiple
-        onChange={(e, value) => setSelectedFeelings(value)}
+        onChange={(e, value) => setSelectedCauses(value)}
       ></Autocomplete>
 
       <LineChart
         className="h-72 mt-4"
         data={data}
         index="date"
-        categories={selectedFeelings}
+        categories={selectedCauses}
         yAxisWidth={30}
       />
     </Card>

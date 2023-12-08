@@ -1,4 +1,4 @@
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import {
   Avatar,
   Skeleton,
@@ -10,7 +10,7 @@ import {
   Box,
   Typography,
 } from '@mui/joy';
-import { getAuth, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
+import { signOut } from '../auth/authSlice.js';
 import { Logout, LoginSharp } from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
 import { selectUserinfo } from '../auth/authSlice.js';
@@ -20,8 +20,10 @@ function UserProfile() {
 
   const userinfo = useSelector(selectUserinfo);
 
-  function signIn() {
-    return signInWithPopup(getAuth(), new GoogleAuthProvider());
+  const dispatch = useDispatch();
+
+  function dispatchSignOut() {
+    return dispatch(signOut());
   }
 
   return (
@@ -49,16 +51,16 @@ function UserProfile() {
           </Typography>
         </Box>
         <ListDivider></ListDivider>
-        <MenuItem
-          color="success"
-          onClick={() => signIn()}
-        >
-          <LoginSharp></LoginSharp>
-          {t('reusable.login')}
-        </MenuItem>
+        {/*<MenuItem*/}
+        {/*  color="success"*/}
+        {/*  // onClick={() => signIn()}*/}
+        {/*>*/}
+        {/*  <LoginSharp></LoginSharp>*/}
+        {/*  {t('reusable.login')}*/}
+        {/*</MenuItem>*/}
         <MenuItem
           color="danger"
-          onClick={() => auth.signOut()}
+          onClick={() => dispatchSignOut()}
         >
           <Logout></Logout>
           {t('reusable.logout')}

@@ -1,5 +1,8 @@
 export default {
   auth: {
+    title: 'Авторизація',
+    description: 'Будь ласка, авторизуйтесь, щоб використовувати функціонал додатку',
+    authorize: 'Авторизуватись',
   },
   reusable: {
     darkMode: 'Темна тема',

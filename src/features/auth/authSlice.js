@@ -3,7 +3,7 @@ import {
   createSelector,
   createSlice,
 } from '@reduxjs/toolkit';
-import { getAuth } from 'firebase/auth';
+import { getAuth, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 
 export const initializeAuth = createAsyncThunk(
   'auth/initializeAuth',
@@ -26,16 +26,39 @@ export const initializeAuth = createAsyncThunk(
   },
 );
 
+export const signIn = createAsyncThunk(
+  'auth/signIn',
+  async (arg, thunkAPI) => {
+    const auth = getAuth();
+    await signInWithPopup(getAuth(), new GoogleAuthProvider());
+    return thunkAPI.dispatch(initializeAuth());
+  },
+);
+
+export const signOut = createAsyncThunk(
+  'auth/signOut',
+  async () => {
+    const auth = getAuth();
+    await auth.signOut();
+  },
+);
+
 export const authSlice = createSlice({
   name: 'auth',
   initialState: {
     user: null,
+    alreadyInitialized: false,
   },
   extraReducers: (builder) => {
     builder.addCase(initializeAuth.fulfilled, (state, action) => {
       state.user = action.payload;
+      state.alreadyInitialized = true;
     });
     builder.addCase(initializeAuth.rejected, (state) => {
+      state.user = null;
+      state.alreadyInitialized = true;
+    });
+    builder.addCase(signOut.fulfilled, (state, action) => {
       state.user = null;
     });
   }

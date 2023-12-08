@@ -1,9 +1,15 @@
 import { Box, Grid } from '@mui/joy';
+import { useSelector } from 'react-redux';
+import { selectUID } from '../../features/auth/authSlice.js';
 import AppBar from '../../layouts/AppBar/AppBar.jsx';
 import History from '../../layouts/History/History.jsx';
 import Dashboards from '../../layouts/Dashboards/Dashboards.jsx';
+import AuthPopup from '../../layouts/AuthPopup/AuthPopup.jsx';
 
 function MainPage() {
+  const uid = useSelector(selectUID);
+  const alreadyInitialized = useSelector((state) => state.auth.alreadyInitialized);
+
   return (
     <Box
       component="main"
@@ -14,6 +20,7 @@ function MainPage() {
         bgcolor: 'background.body',
       }}
     >
+      {alreadyInitialized && !uid && <AuthPopup />}
       <AppBar />
       <Grid
         sx={{

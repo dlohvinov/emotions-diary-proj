@@ -14,7 +14,6 @@ function AppBar() {
   const { t } = useTranslation();
 
   const theme = useTheme();
-  console.info(theme);
 
   return (
     <Box

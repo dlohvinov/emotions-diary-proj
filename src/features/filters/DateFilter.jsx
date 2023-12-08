@@ -10,6 +10,7 @@ function DateFilter() {
 
   return (
     <DateRangePicker
+      minDate={new Date(Date.now() - 1000 * 60 * 60 * 24 * 365)}
       value={value}
       onValueChange={onValueChange}
     />

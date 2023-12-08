@@ -43,7 +43,6 @@ export const feelingsSlice = createSlice({
       state.loading = LoadingStatus.IDLE;
     });
     builder.addCase(fetchFeelings.rejected, (state, action) => {
-      console.log(action.error);
       state.loading = LoadingStatus.IDLE;
     });
     builder.addCase(fetchFeelings.pending, (state) => {

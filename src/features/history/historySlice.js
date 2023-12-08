@@ -125,7 +125,7 @@ export const historySlice = createSlice({
     filters: {
       feelings: [],
       date: {
-        from: new Date(1, 1, 2023).getTime(),
+        from: new Date(2023, 6, 1).getTime(),
         // from: new Date(new Date().setDate(1)).getTime(),
         to: new Date().getTime(),
       },
@@ -148,7 +148,6 @@ export const historySlice = createSlice({
       state.loading = LoadingStatus.IDLE;
     });
     builder.addCase(fetchHistory.rejected, (state, action) => {
-      console.log(action.error);
       state.loading = LoadingStatus.IDLE;
     });
     builder.addCase(fetchHistory.pending, (state) => {

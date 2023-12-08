@@ -38,7 +38,6 @@ export const causesSlice = createSlice({
       state.loading = LoadingStatus.IDLE;
     });
     builder.addCase(fetchCauses.rejected, (state, action) => {
-      console.log(action.error);
       state.loading = LoadingStatus.IDLE;
     });
     builder.addCase(fetchCauses.pending, (state) => {
